@@ -1,0 +1,151 @@
+{
+  "nav": {
+    "home": "መእተዊ",
+    "products": "ፍርያት",
+    "cart": "ጋሪ",
+    "wishlist": "ዝርዝር ምርጫ",
+    "login": "እቶ",
+    "register": "ተመዝገብ",
+    "profile": "ፕሮፋይል",
+    "logout": "ውጻእ",
+    "admin": "ዳሽቦርድ ምምሕዳር",
+    "about": "ብዛዕባና",
+    "contact": "ርኸቡና",
+    "shop": "ዕዳጋ",
+    "categories": "ምድባት"
+  },
+  "announcement": {
+    "made": "ኣብ ኢትዮጵያ ዝተሰርሐ",
+    "tagline": "ሓቀኛ። ባህላዊ። ዘይሓልፍ።",
+    "delivery": "ባህሊ ናብ ዓለም ነብጽሕ"
+  },
+  "hero": {
+    "amharic": "የኢትዮጵያ ባህል",
+    "title": "ቅርሲ ኢትዮጵያ ረክቡ",
+    "subtitle": "ብፍቕሪ ዝተሰርሐ። ኣብ ባህሊ ዝተሰረተ። ንዓለም ዝተዳለወ።",
+    "shop_now": "ሕዚ ዓድጉ",
+    "explore": "ባህሊ ዳህሱ",
+    "authentic": "ሓቀኛ ፍርያት",
+    "handmade": "ብኢድ ዝተሰርሐ",
+    "delivery": "ናብ ዓለም ዝበጽሕ"
+  },
+  "home": {
+    "hero_title": "ባህሊ ኢትዮጵያ ኣናዲ",
+    "hero_subtitle": "ካብ ኩሉ ክፋላት ኢትዮጵያ ዝተሰርሑ ናይ ኢድ ስራሓት — ክዳን፣ ጥበባት፣ ጌጣጌጣት ካልኦትን።",
+    "shop_now": "ሕዚ ዓድጉ",
+    "trending": "ፍሉጣት ፍርያት",
+    "new_arrivals": "ሓደሽቲ ፍርያት",
+    "categories": "ምድባት ርአ",
+    "featured": "ዝተመርጹ ፍርያት",
+    "view_all": "ኩሎም ፍርያት ርአ",
+    "made_in": "ኣብ ኢትዮጵያ ዝተሰርሐ",
+    "artisans_sub": "ኣብ 6 ክልላት ዘለዉ ናይ ኢድ ሰርሕቲ ይድግፍ",
+    "newsletter_title": "ናብ ባህላዊ ጉዕዞና ተጸምበሩ",
+    "newsletter_sub": "ብዛዕባ ሓደሽቲ ፍርያትን ታሪኻት ቅርሲ ኢትዮጵያን ዝምልከቱ ሓበሬታ ርኸቡ",
+    "subscribe": "ተመዝገቡ",
+    "email_placeholder": "ኢሜይልኩም ኣእትዉ"
+  },
+  "stats": {
+    "artisans": "ናይ ኢድ ሰርሕቲ",
+    "products": "ፍርያት",
+    "regions": "ክልላት",
+    "authentic": "ሓቀኛ"
+  },
+  "trust": {
+    "made_in": "ኣብ ኢትዮጵያ ዝተሰርሐ",
+    "made_sub": "ናይ ከባቢ ሰርሕቲ ይድግፍ",
+    "secure": "ውሑስ ክፍሊት",
+    "secure_sub": "100% ውሑስ",
+    "delivery": "ቅልጡፍ ምብጻሕ",
+    "delivery_sub": "ናብ ዓለም ዝበጽሕ",
+    "returns": "ቀሊል ምምላስ",
+    "returns_sub": "ብዘይ ጸገም ምምላስ",
+    "support": "ደገፍ ዓሚል",
+    "support_sub": "ንምሕጋዝ ድሉዋት ኢና"
+  },
+  "product": {
+    "add_to_cart": "ናብ ጋሪ ወስኽ",
+    "add_to_wishlist": "ናብ ዝርዝር ምርጫ ወስኽ",
+    "remove_wishlist": "ካብ ዝርዝር ምርጫ ኣውጻእ",
+    "in_stock": "ኣሎ",
+    "out_of_stock": "የለን",
+    "related": "ዝተኣሳሰሩ ፍርያት",
+    "description": "መግለጺ",
+    "price": "ዋጋ",
+    "category": "ምድብ",
+    "region": "ክልል",
+    "quantity": "መጠን",
+    "view_details": "ዝርዝር ርአ",
+    "made_in": "ኣብ ኢትዮጵያ ዝተሰርሐ"
+  },
+  "cart": {
+    "title": "ጋሪኻ",
+    "empty": "ጋሪኻ ባዶ እዩ",
+    "total": "ድምር",
+    "checkout": "ክፈል",
+    "remove": "ኣውጻእ",
+    "continue": "ግዢ ቀጽል"
+  },
+  "wishlist": {
+    "title": "ዝርዝር ምርጫኻ",
+    "empty": "ዝርዝር ምርጫኻ ባዶ እዩ"
+  },
+  "auth": {
+    "login": "እቶ",
+    "register": "ሕሳብ ፍጠር",
+    "email": "ኢሜይል",
+    "password": "ሕሽሽ ቃል",
+    "name": "ምሉእ ስም",
+    "confirm_password": "ሕሽሽ ቃል ኣረጋግጽ",
+    "no_account": "ሕሳብ የብልካን?",
+    "have_account": "ሕሳብ ኣሎካ?",
+    "login_success": "ብደሓን መጻእካ!",
+    "register_success": "ሕሳብ ብዓወት ተፈጢሩ!"
+  },
+  "admin": {
+    "dashboard": "ዳሽቦርድ",
+    "products": "ፍርያት",
+    "orders": "ትእዛዛት",
+    "users": "ተጠቀምቲ",
+    "add_product": "ፍርያት ወስኽ",
+    "edit_product": "ፍርያት ኣርትዕ",
+    "delete_product": "ፍርያት ሰርዝ",
+    "total_revenue": "ጠቕላላ እቶት",
+    "total_orders": "ጠቕላላ ትእዛዛት",
+    "total_users": "ጠቕላላ ተጠቀምቲ",
+    "total_products": "ጠቕላላ ፍርያት"
+  },
+  "common": {
+    "search": "ፍርያት ድለ...",
+    "filter": "ኣጣርዕ",
+    "sort": "ደርድር",
+    "loading": "ይጽዓን ኣሎ...",
+    "error": "ጸገም ተፈጢሩ",
+    "save": "ኣቐምጥ",
+    "cancel": "ሰርዝ",
+    "delete": "ሰርዝ",
+    "edit": "ኣርትዕ",
+    "view": "ርአ",
+    "back": "ተመለስ",
+    "etb": "ብር"
+  },
+  "categories": {
+    "clothing": "ባህላዊ ክዳን",
+    "crafts": "ናይ ኢድ ስራሓት",
+    "accessories": "ጌጣጌጣት",
+    "jewelry": "ወርቂ ብሩር",
+    "art": "ጥበብ ስእልታት",
+    "food": "ባህላዊ መግቢ",
+    "music": "ሙዚቃ መሳርሒታት"
+  },
+  "regions": {
+    "addis_ababa": "ኣዲስ ኣበባ",
+    "oromia": "ኦሮሚያ",
+    "amhara": "ኣምሓራ",
+    "tigray": "ትግራይ",
+    "snnpr": "ደቡብ ብሄራት",
+    "somali": "ሶማሌ",
+    "afar": "ኣፋር",
+    "harari": "ሓረሪ"
+  }
+}

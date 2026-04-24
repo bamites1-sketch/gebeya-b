@@ -1,0 +1,29 @@
+# ── Dependencies ─────────────────────────────────────────────────
+node_modules/
+**/node_modules/
+
+# ── Environment files (NEVER commit these) ───────────────────────
+.env
+.env.local
+.env.production
+backend/.env
+
+# ── Build output ─────────────────────────────────────────────────
+frontend/dist/
+frontend/.vite/
+
+# ── Uploads (user-uploaded images) ───────────────────────────────
+backend/uploads/*
+!backend/uploads/.gitkeep
+
+# ── Prisma ───────────────────────────────────────────────────────
+backend/prisma/dev.db
+backend/prisma/dev.db-journal
+
+# ── OS files ─────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+
+# ── Logs ─────────────────────────────────────────────────────────
+*.log
+npm-debug.log*

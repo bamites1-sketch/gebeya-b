@@ -1,0 +1,151 @@
+{
+  "nav": {
+    "home": "Mana",
+    "products": "Meeshaalee",
+    "cart": "Kaaree",
+    "wishlist": "Fedhii Tarree",
+    "login": "Seeni",
+    "register": "Galmaa'i",
+    "profile": "Profaayilii",
+    "logout": "Ba'i",
+    "admin": "Daashboordii Bulchiinsaa",
+    "about": "Waa'ee keenya",
+    "contact": "Nu qunnamaa",
+    "shop": "Gabaa",
+    "categories": "Ramaddiiwwan"
+  },
+  "announcement": {
+    "made": "Itoophiyaatti Hojjetame",
+    "tagline": "Dhugaa. Aadaa. Yeroo hundaa.",
+    "delivery": "Aadaa Addunyaatti Geessina"
+  },
+  "hero": {
+    "amharic": "የኢትዮጵያ ባህል",
+    "title": "Qabeenyaa Itoophiyaa Argadhu",
+    "subtitle": "Jaalalaaan hojjetame. Aadaarra hundaa'e. Addunyaaf qophaa'e.",
+    "shop_now": "Amma Bitadhu",
+    "explore": "Aadaa Keessattu",
+    "authentic": "Meeshaalee Dhugaa",
+    "handmade": "Harka Hojjetame",
+    "delivery": "Addunyaa Maratti Geessina"
+  },
+  "home": {
+    "hero_title": "Aadaa Itoophiyaa Argadhu",
+    "hero_subtitle": "Meeshaalee harka hojjetaman Itoophiyaa maraa — uffata, hojii harkaa, faaya, fi kan biroo.",
+    "shop_now": "Amma Bitadhu",
+    "trending": "Meeshaalee Beekamoo",
+    "new_arrivals": "Meeshaalee Haaraa",
+    "categories": "Gosa Ilaaluu",
+    "featured": "Meeshaalee Filatamoo",
+    "view_all": "Meeshaalee hunda ilaali",
+    "made_in": "Itoophiyaatti Hojjetame",
+    "artisans_sub": "Hojjettootaa naannoo 6 keessa jiran ni deeggarti",
+    "newsletter_title": "Imala Aadaa Keenyatti Makamaa",
+    "newsletter_sub": "Meeshaalee haaraa fi seenaa dhaalaa Itoophiyaa irratti odeeffannoo argadhu",
+    "subscribe": "Galmaa'i",
+    "email_placeholder": "Teessoo imeelii kee galchi"
+  },
+  "stats": {
+    "artisans": "Hojjettootaa",
+    "products": "Meeshaalee",
+    "regions": "Naannoowwan",
+    "authentic": "Dhugaa"
+  },
+  "trust": {
+    "made_in": "Itoophiyaatti Hojjetame",
+    "made_sub": "Hojjettootaa naannoo ni deeggarti",
+    "secure": "Kaffaltii Nagahaa",
+    "secure_sub": "100% nagahaa",
+    "delivery": "Geejjiba Ariifataa",
+    "delivery_sub": "Addunyaa maratti",
+    "returns": "Deebisuu Salphaa",
+    "returns_sub": "Rakkoo malee deebisuu",
+    "support": "Deeggarsa Maamilaa",
+    "support_sub": "Gargaaruuf qophii dha"
+  },
+  "product": {
+    "add_to_cart": "Kaaree Itti Dabaluu",
+    "add_to_wishlist": "Fedhii Tarreetti Dabaluu",
+    "remove_wishlist": "Fedhii Tarrerraa Kaasuu",
+    "in_stock": "Jira",
+    "out_of_stock": "Hin Jiru",
+    "related": "Meeshaalee Walqabatoo",
+    "description": "Ibsa",
+    "price": "Gatii",
+    "category": "Gosa",
+    "region": "Naannoo",
+    "quantity": "Baay'ina",
+    "view_details": "Ibsa ilaali",
+    "made_in": "Itoophiyaatti tolfame"
+  },
+  "cart": {
+    "title": "Kaaree Kee",
+    "empty": "Kaareen kee duwwaadha",
+    "total": "Waliigala",
+    "checkout": "Kafali",
+    "remove": "Kaasi",
+    "continue": "Bituu Itti Fufi"
+  },
+  "wishlist": {
+    "title": "Fedhii Tarree Kee",
+    "empty": "Fedhii tarreen kee duwwaadha"
+  },
+  "auth": {
+    "login": "Seeni",
+    "register": "Herrega Uumi",
+    "email": "Teessoo Imeelii",
+    "password": "Jecha Darbii",
+    "name": "Maqaa Guutuu",
+    "confirm_password": "Jecha Darbii Mirkaneessi",
+    "no_account": "Herrega hin qabduu?",
+    "have_account": "Herrega qabdaa?",
+    "login_success": "Baga nagaan dhufte!",
+    "register_success": "Herreegni milkaa'inaan uumame!"
+  },
+  "admin": {
+    "dashboard": "Daashboordii",
+    "products": "Meeshaalee",
+    "orders": "Ajajaalee",
+    "users": "Fayyadamtoota",
+    "add_product": "Meeshaa Dabaluu",
+    "edit_product": "Meeshaa Gulaali",
+    "delete_product": "Meeshaa Haqi",
+    "total_revenue": "Galii Waliigalaa",
+    "total_orders": "Ajajaalee Waliigalaa",
+    "total_users": "Fayyadamtoota Waliigalaa",
+    "total_products": "Meeshaalee Waliigalaa"
+  },
+  "common": {
+    "search": "Meeshaalee barbaadi...",
+    "filter": "Calaluu",
+    "sort": "Tartiibsuu",
+    "loading": "Fe'aa jira...",
+    "error": "Rakkoo uumame",
+    "save": "Olkaa'i",
+    "cancel": "Haqi",
+    "delete": "Haqi",
+    "edit": "Gulaali",
+    "view": "Ilaali",
+    "back": "Deebi'i",
+    "etb": "Birrii"
+  },
+  "categories": {
+    "clothing": "Uffata Aadaa",
+    "crafts": "Hojii Harkaa",
+    "accessories": "Faayaa",
+    "jewelry": "Warqee Meetii",
+    "art": "Aartii fi Fakkii",
+    "food": "Nyaata Aadaa",
+    "music": "Muuziqaa fi Meeshaalee"
+  },
+  "regions": {
+    "addis_ababa": "Finfinnee",
+    "oromia": "Oromiyaa",
+    "amhara": "Amaaraa",
+    "tigray": "Tigraay",
+    "snnpr": "Kibbaa",
+    "somali": "Somaalee",
+    "afar": "Affaar",
+    "harari": "Hararii"
+  }
+}

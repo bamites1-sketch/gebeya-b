@@ -1,0 +1,49 @@
+﻿@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  *, *::before, *::after { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { @apply font-sans antialiased text-[#2C1810] dark:bg-gray-950 dark:text-gray-100; background-color: #F5F0E8; }
+}
+
+@layer components {
+  .ethiopian-border {
+    border-image: linear-gradient(90deg, #078930 33%, #FCDD09 33% 66%, #DA121A 66%) 1;
+  }
+  /* Tibeb-inspired diagonal weave pattern */
+  .pattern-bg {
+    background-image:
+      repeating-linear-gradient(45deg, transparent, transparent 8px, rgba(241,154,14,0.06) 8px, rgba(241,154,14,0.06) 16px),
+      repeating-linear-gradient(-45deg, transparent, transparent 8px, rgba(7,137,48,0.04) 8px, rgba(7,137,48,0.04) 16px);
+  }
+  /* Denser tibeb for dark sections */
+  .pattern-tibeb {
+    background-image:
+      repeating-linear-gradient(45deg, transparent, transparent 6px, rgba(241,154,14,0.08) 6px, rgba(241,154,14,0.08) 12px),
+      repeating-linear-gradient(-45deg, transparent, transparent 6px, rgba(218,18,26,0.05) 6px, rgba(218,18,26,0.05) 12px);
+  }
+  /* Logo glow ring */
+  .logo-glow {
+    filter: drop-shadow(0 0 14px rgba(241,154,14,0.55));
+  }
+  .logo-glow-hover:hover {
+    filter: drop-shadow(0 0 20px rgba(241,154,14,0.8));
+  }
+  /* Ethiopian flag stripe — reusable */
+  .flag-stripe {
+    background: linear-gradient(90deg, #078930 33%, #FCDD09 33% 66%, #DA121A 66%);
+  }
+  /* Made-in badge pill */
+  .made-in-badge {
+    @apply inline-flex items-center gap-1 bg-[#2C1810]/80 backdrop-blur-sm
+           text-[#FCDD09] text-[10px] font-bold px-2 py-0.5 rounded-full
+           border border-[#F19A0E]/40 tracking-wide;
+  }
+}
+
+@layer utilities {
+  .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+  .scrollbar-hide::-webkit-scrollbar { display: none; }
+}

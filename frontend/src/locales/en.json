@@ -1,0 +1,151 @@
+{
+  "nav": {
+    "home": "Home",
+    "products": "Products",
+    "cart": "Cart",
+    "wishlist": "Wishlist",
+    "login": "Login",
+    "register": "Register",
+    "profile": "Profile",
+    "logout": "Logout",
+    "admin": "Admin Dashboard",
+    "about": "About Us",
+    "contact": "Contact",
+    "shop": "Shop",
+    "categories": "Categories"
+  },
+  "announcement": {
+    "made": "Proudly Made in Ethiopia",
+    "tagline": "Authentic. Cultural. Timeless.",
+    "delivery": "Delivering Culture Worldwide"
+  },
+  "hero": {
+    "amharic": "የኢትዮጵያ ባህል",
+    "title": "Discover Ethiopia's Rich Heritage",
+    "subtitle": "Handmade with love. Rooted in tradition. Made for the world.",
+    "shop_now": "Shop Now",
+    "explore": "Explore Culture",
+    "authentic": "Authentic Products",
+    "handmade": "Handmade",
+    "delivery": "Worldwide Delivery"
+  },
+  "home": {
+    "hero_title": "Discover Ethiopian Culture",
+    "hero_subtitle": "Authentic handcrafted goods from across Ethiopia — clothing, crafts, accessories, and more.",
+    "shop_now": "Shop Now",
+    "trending": "Trending Products",
+    "new_arrivals": "New Arrivals",
+    "categories": "Browse Categories",
+    "featured": "Featured Products",
+    "view_all": "View all products",
+    "made_in": "Made in Ethiopia",
+    "artisans_sub": "Supporting local artisans across 6 regions",
+    "newsletter_title": "Join Our Cultural Journey",
+    "newsletter_sub": "Get updates on new arrivals and Ethiopian heritage stories",
+    "subscribe": "Subscribe",
+    "email_placeholder": "Enter your email address"
+  },
+  "stats": {
+    "artisans": "Artisans",
+    "products": "Products",
+    "regions": "Regions",
+    "authentic": "Authentic"
+  },
+  "trust": {
+    "made_in": "Made in Ethiopia",
+    "made_sub": "Supporting local artisans",
+    "secure": "Secure Payment",
+    "secure_sub": "100% secure & safe",
+    "delivery": "Fast Delivery",
+    "delivery_sub": "Worldwide shipping",
+    "returns": "Easy Returns",
+    "returns_sub": "Hassle-free returns",
+    "support": "Customer Support",
+    "support_sub": "We're here to help"
+  },
+  "product": {
+    "add_to_cart": "Add to Cart",
+    "add_to_wishlist": "Add to Wishlist",
+    "remove_wishlist": "Remove from Wishlist",
+    "in_stock": "In Stock",
+    "out_of_stock": "Out of Stock",
+    "related": "Related Products",
+    "description": "Description",
+    "price": "Price",
+    "category": "Category",
+    "region": "Region",
+    "quantity": "Quantity",
+    "view_details": "View Details",
+    "made_in": "Made in Ethiopia"
+  },
+  "cart": {
+    "title": "Your Cart",
+    "empty": "Your cart is empty",
+    "total": "Total",
+    "checkout": "Checkout",
+    "remove": "Remove",
+    "continue": "Continue Shopping"
+  },
+  "wishlist": {
+    "title": "Your Wishlist",
+    "empty": "Your wishlist is empty"
+  },
+  "auth": {
+    "login": "Login",
+    "register": "Create Account",
+    "email": "Email Address",
+    "password": "Password",
+    "name": "Full Name",
+    "confirm_password": "Confirm Password",
+    "no_account": "Don't have an account?",
+    "have_account": "Already have an account?",
+    "login_success": "Welcome back!",
+    "register_success": "Account created successfully!"
+  },
+  "admin": {
+    "dashboard": "Dashboard",
+    "products": "Products",
+    "orders": "Orders",
+    "users": "Users",
+    "add_product": "Add Product",
+    "edit_product": "Edit Product",
+    "delete_product": "Delete Product",
+    "total_revenue": "Total Revenue",
+    "total_orders": "Total Orders",
+    "total_users": "Total Users",
+    "total_products": "Total Products"
+  },
+  "common": {
+    "search": "Search products...",
+    "filter": "Filter",
+    "sort": "Sort",
+    "loading": "Loading...",
+    "error": "Something went wrong",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "view": "View",
+    "back": "Back",
+    "etb": "ETB"
+  },
+  "categories": {
+    "clothing": "Traditional Clothing",
+    "crafts": "Handcrafts",
+    "accessories": "Accessories",
+    "jewelry": "Jewelry",
+    "art": "Art & Paintings",
+    "food": "Traditional Food",
+    "music": "Music & Instruments"
+  },
+  "regions": {
+    "addis_ababa": "Addis Ababa",
+    "oromia": "Oromia",
+    "amhara": "Amhara",
+    "tigray": "Tigray",
+    "snnpr": "SNNPR",
+    "somali": "Somali",
+    "afar": "Afar",
+    "harari": "Harari"
+  }
+}

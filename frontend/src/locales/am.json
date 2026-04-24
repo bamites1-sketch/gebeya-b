@@ -1,0 +1,151 @@
+{
+  "nav": {
+    "home": "መነሻ",
+    "products": "ምርቶች",
+    "cart": "ጋሪ",
+    "wishlist": "ምኞት ዝርዝር",
+    "login": "ግባ",
+    "register": "ተመዝገብ",
+    "profile": "መገለጫ",
+    "logout": "ውጣ",
+    "admin": "አስተዳዳሪ ዳሽቦርድ",
+    "about": "ስለ እኛ",
+    "contact": "አግኙን",
+    "shop": "ሱቅ",
+    "categories": "ምድቦች"
+  },
+  "announcement": {
+    "made": "በኢትዮጵያ የተሰራ",
+    "tagline": "ትክክለኛ። ባህላዊ። ዘላቂ።",
+    "delivery": "ባህልን ወደ አለም እናደርሳለን"
+  },
+  "hero": {
+    "amharic": "የኢትዮጵያ ባህል",
+    "title": "የኢትዮጵያን ቅርስ ያግኙ",
+    "subtitle": "በፍቅር የተሰራ። በባህል የተመሰረተ። ለአለም ተዘጋጅቷል።",
+    "shop_now": "አሁን ይግዙ",
+    "explore": "ባህልን ያስሱ",
+    "authentic": "ትክክለኛ ምርቶች",
+    "handmade": "በእጅ የተሰራ",
+    "delivery": "የአለም አቀፍ መላኪያ"
+  },
+  "home": {
+    "hero_title": "የኢትዮጵያን ባህል ያግኙ",
+    "hero_subtitle": "ከኢትዮጵያ ሁሉም ክፍሎች የተሰሩ ትክክለኛ የእጅ ሥራዎች — ልብሶች፣ ጥበቦች፣ ጌጣጌጦች እና ሌሎችም።",
+    "shop_now": "አሁን ይግዙ",
+    "trending": "ታዋቂ ምርቶች",
+    "new_arrivals": "አዲስ ምርቶች",
+    "categories": "ምድቦችን ያስሱ",
+    "featured": "ተለዩ ምርቶች",
+    "view_all": "ሁሉንም ምርቶች ይመልከቱ",
+    "made_in": "በኢትዮጵያ የተሰራ",
+    "artisans_sub": "በ6 ክልሎች ውስጥ ያሉ አርቲሳኖችን ይደግፋሉ",
+    "newsletter_title": "ወደ ባህላዊ ጉዟችን ይቀላቀሉ",
+    "newsletter_sub": "ስለ አዲስ ምርቶች እና የኢትዮጵያ ቅርስ ታሪኮች ዝማኔዎችን ያግኙ",
+    "subscribe": "ይመዝገቡ",
+    "email_placeholder": "ኢሜይልዎን ያስገቡ"
+  },
+  "stats": {
+    "artisans": "አርቲሳኖች",
+    "products": "ምርቶች",
+    "regions": "ክልሎች",
+    "authentic": "ትክክለኛ"
+  },
+  "trust": {
+    "made_in": "በኢትዮጵያ የተሰራ",
+    "made_sub": "የአካባቢ አርቲሳኖችን ይደግፋሉ",
+    "secure": "ደህንነቱ የተጠበቀ ክፍያ",
+    "secure_sub": "100% ደህንነቱ የተጠበቀ",
+    "delivery": "ፈጣን ማድረሻ",
+    "delivery_sub": "የአለም አቀፍ መላኪያ",
+    "returns": "ቀላል መመለሻ",
+    "returns_sub": "ያለ ችግር መመለሻ",
+    "support": "የደንበኛ ድጋፍ",
+    "support_sub": "ለመርዳት ዝግጁ ነን"
+  },
+  "product": {
+    "add_to_cart": "ወደ ጋሪ ጨምር",
+    "add_to_wishlist": "ወደ ምኞት ዝርዝር ጨምር",
+    "remove_wishlist": "ከምኞት ዝርዝር አስወግድ",
+    "in_stock": "አለ",
+    "out_of_stock": "የለም",
+    "related": "ተዛማጅ ምርቶች",
+    "description": "መግለጫ",
+    "price": "ዋጋ",
+    "category": "ምድብ",
+    "region": "ክልል",
+    "quantity": "መጠን",
+    "view_details": "ዝርዝር ይመልከቱ",
+    "made_in": "በኢትዮጵያ የተሰራ"
+  },
+  "cart": {
+    "title": "ጋሪዎ",
+    "empty": "ጋሪዎ ባዶ ነው",
+    "total": "ጠቅላላ",
+    "checkout": "ክፈል",
+    "remove": "አስወግድ",
+    "continue": "ግዢ ቀጥል"
+  },
+  "wishlist": {
+    "title": "ምኞት ዝርዝርዎ",
+    "empty": "ምኞት ዝርዝርዎ ባዶ ነው"
+  },
+  "auth": {
+    "login": "ግባ",
+    "register": "መለያ ፍጠር",
+    "email": "ኢሜይል አድራሻ",
+    "password": "የይለፍ ቃል",
+    "name": "ሙሉ ስም",
+    "confirm_password": "የይለፍ ቃል አረጋግጥ",
+    "no_account": "መለያ የለዎትም?",
+    "have_account": "መለያ አለዎት?",
+    "login_success": "እንኳን ደህና መጡ!",
+    "register_success": "መለያ በተሳካ ሁኔታ ተፈጥሯል!"
+  },
+  "admin": {
+    "dashboard": "ዳሽቦርድ",
+    "products": "ምርቶች",
+    "orders": "ትዕዛዞች",
+    "users": "ተጠቃሚዎች",
+    "add_product": "ምርት ጨምር",
+    "edit_product": "ምርት አርትዕ",
+    "delete_product": "ምርት ሰርዝ",
+    "total_revenue": "ጠቅላላ ገቢ",
+    "total_orders": "ጠቅላላ ትዕዛዞች",
+    "total_users": "ጠቅላላ ተጠቃሚዎች",
+    "total_products": "ጠቅላላ ምርቶች"
+  },
+  "common": {
+    "search": "ምርቶችን ፈልግ...",
+    "filter": "አጣራ",
+    "sort": "ደርድር",
+    "loading": "በመጫን ላይ...",
+    "error": "ችግር ተፈጥሯል",
+    "save": "አስቀምጥ",
+    "cancel": "ሰርዝ",
+    "delete": "ሰርዝ",
+    "edit": "አርትዕ",
+    "view": "ይመልከቱ",
+    "back": "ተመለስ",
+    "etb": "ብር"
+  },
+  "categories": {
+    "clothing": "ባህላዊ ልብስ",
+    "crafts": "የእጅ ሥራዎች",
+    "accessories": "ጌጣጌጦች",
+    "jewelry": "ወርቅ ብር",
+    "art": "ጥበብ እና ሥዕሎች",
+    "food": "ባህላዊ ምግብ",
+    "music": "ሙዚቃ እና መሳሪያዎች"
+  },
+  "regions": {
+    "addis_ababa": "አዲስ አበባ",
+    "oromia": "ኦሮሚያ",
+    "amhara": "አማራ",
+    "tigray": "ትግራይ",
+    "snnpr": "ደቡብ ብሔሮች",
+    "somali": "ሶማሌ",
+    "afar": "አፋር",
+    "harari": "ሐረሪ"
+  }
+}
