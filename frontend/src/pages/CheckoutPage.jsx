@@ -139,65 +139,83 @@ export default function CheckoutPage() {
       animate={{ opacity: 1, y: 0 }}
       className="max-w-2xl mx-auto px-4 py-12"
     >
-      {/* Success header */}
-      <div className="text-center mb-10">
-        <motion.div
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
-          transition={{ type: 'spring', stiffness: 200, delay: 0.1 }}
-          className="w-24 h-24 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mx-auto mb-5"
-        >
-          <span className="text-5xl">✅</span>
-        </motion.div>
-        <h1 className="text-3xl font-black text-gray-900 dark:text-white mb-2">Payment Successful!</h1>
-        <p className="text-gray-500 dark:text-gray-400">Thank you for your order, {user.name.split(' ')[0]}!</p>
-      </div>
+      {/* Receipt card */}
+      <div className="bg-white rounded-3xl shadow-xl overflow-hidden">
 
-      {/* Order details card */}
-      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm overflow-hidden mb-6">
-        {/* Ethiopian flag stripe */}
-        <div className="h-1 w-full" style={{ background: 'linear-gradient(90deg,#078930 33%,#FCDD09 33% 66%,#DA121A 66%)' }} />
+        {/* Header */}
+        <div className="relative text-white text-center py-8 px-6"
+          style={{ background: 'linear-gradient(135deg, #2C1810 0%, #1a0e06 50%, #078930 100%)' }}>
+          <div className="absolute inset-0 pattern-tibeb opacity-20" />
+          <div className="relative">
+            <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }}
+              transition={{ type: 'spring', stiffness: 200, delay: 0.1 }}
+              className="w-16 h-16 bg-green-400 rounded-full flex items-center justify-center mx-auto mb-3 shadow-lg">
+              <span className="text-3xl">✅</span>
+            </motion.div>
+            <h1 className="text-2xl font-black">Payment Successful!</h1>
+            <p className="text-white/70 text-sm mt-1">Thank you, {user.name.split(' ')[0]}!</p>
+          </div>
+        </div>
 
-        <div className="p-6 space-y-4">
-          <div className="grid grid-cols-2 gap-4 text-sm">
-            <div className="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-3">
-              <p className="text-gray-500 dark:text-gray-400 text-xs mb-1">Order Number</p>
-              <p className="font-black text-[#F19A0E] font-mono">#{order.orderId}</p>
+        {/* Receipt body */}
+        <div className="p-6">
+
+          {/* Receipt header info */}
+          <div className="flex items-center justify-between mb-5 pb-4 border-b border-dashed border-gray-200">
+            <div className="flex items-center gap-3">
+              <img src="/logo.jpg" alt="gebeya-B" className="w-10 h-10 object-contain rounded-full"
+                onError={(e) => { e.currentTarget.style.display = 'none'; }} />
+              <div>
+                <p className="font-black text-[#2C1810] text-sm">gebeya-B</p>
+                <p className="text-[10px] text-gray-400">Ethiopian Cultural Marketplace</p>
+              </div>
             </div>
-            <div className="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-3">
-              <p className="text-gray-500 dark:text-gray-400 text-xs mb-1">Transaction ID</p>
-              <p className="font-mono text-xs text-gray-700 dark:text-gray-300 truncate">{order.txnId}</p>
-            </div>
-            <div className="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-3">
-              <p className="text-gray-500 dark:text-gray-400 text-xs mb-1">Payment Method</p>
-              <p className="font-semibold text-gray-900 dark:text-white">
-                {METHODS.find(m => m.id === order.paymentMethod)?.icon}{' '}
-                {METHODS.find(m => m.id === order.paymentMethod)?.label}
-              </p>
-            </div>
-            <div className="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-3">
-              <p className="text-gray-500 dark:text-gray-400 text-xs mb-1">Total Paid</p>
-              <p className="font-black text-xl text-[#F19A0E]">{order.totalPrice?.toLocaleString()} ETB</p>
+            <div className="text-right">
+              <p className="text-xs text-gray-400">Receipt</p>
+              <p className="font-mono text-xs font-bold text-[#2C1810]">#{order.orderId}</p>
             </div>
           </div>
 
-          {/* Items */}
-          <div className="border-t dark:border-gray-700 pt-4">
-            <p className="text-sm font-bold text-gray-700 dark:text-gray-300 mb-3">
-              📦 Items Ordered ({order.items?.length})
-            </p>
-            <div className="space-y-2">
+          {/* Meta row */}
+          <div className="grid grid-cols-3 gap-3 mb-5 text-center">
+            <div className="bg-[#F5F0E8] rounded-xl p-3">
+              <p className="text-[10px] text-gray-400 mb-0.5">Date</p>
+              <p className="text-xs font-bold text-[#2C1810]">{new Date().toLocaleDateString('en-GB')}</p>
+            </div>
+            <div className="bg-[#F5F0E8] rounded-xl p-3">
+              <p className="text-[10px] text-gray-400 mb-0.5">Payment</p>
+              <p className="text-xs font-bold text-[#2C1810]">
+                {METHODS.find(m => m.id === order.paymentMethod)?.icon}{' '}
+                {METHODS.find(m => m.id === order.paymentMethod)?.label.split(' ')[0]}
+              </p>
+            </div>
+            <div className="bg-[#F5F0E8] rounded-xl p-3">
+              <p className="text-[10px] text-gray-400 mb-0.5">Status</p>
+              <p className="text-xs font-bold text-green-600">✓ Paid</p>
+            </div>
+          </div>
+
+          {/* Items table */}
+          <div className="mb-4">
+            <div className="flex justify-between text-[10px] font-bold text-gray-400 uppercase tracking-wider pb-2 border-b border-gray-100">
+              <span>Item</span>
+              <span>Qty</span>
+              <span className="text-right">Amount</span>
+            </div>
+            <div className="divide-y divide-gray-50">
               {order.items?.map((item) => (
-                <div key={item.id} className="flex items-center gap-3 text-sm">
-                  <img
-                    src={getFirstImage(item.product?.images, item.product?.name)}
-                    alt={item.product?.name}
-                    className="w-10 h-10 object-cover rounded-lg shrink-0"
-                    onError={(e) => { e.currentTarget.src = `https://placehold.co/40x40/2C1810/F19A0E?text=${item.product?.name?.[0]}`; e.currentTarget.onerror = null; }}
-                  />
-                  <span className="flex-1 text-gray-700 dark:text-gray-300 truncate">{item.product?.name}</span>
-                  <span className="text-gray-500 dark:text-gray-400">×{item.quantity}</span>
-                  <span className="font-semibold text-gray-900 dark:text-white shrink-0">
+                <div key={item.id} className="flex items-center justify-between py-2.5 text-sm">
+                  <div className="flex items-center gap-2 flex-1 min-w-0">
+                    <img
+                      src={getFirstImage(item.product?.images, item.product?.name)}
+                      alt={item.product?.name}
+                      className="w-8 h-8 object-cover rounded-lg shrink-0"
+                      onError={(e) => { e.currentTarget.src = `https://placehold.co/32x32/2C1810/F19A0E?text=${item.product?.name?.[0]}`; e.currentTarget.onerror = null; }}
+                    />
+                    <span className="text-[#2C1810] font-medium truncate text-xs">{item.product?.name}</span>
+                  </div>
+                  <span className="text-gray-400 text-xs mx-3">×{item.quantity}</span>
+                  <span className="font-bold text-[#2C1810] text-xs shrink-0">
                     {(item.price * item.quantity).toLocaleString()} ETB
                   </span>
                 </div>
@@ -205,18 +223,68 @@ export default function CheckoutPage() {
             </div>
           </div>
 
-          {/* Simulated email confirmation */}
-          <div className="bg-[#FEF3E2] dark:bg-[#2C1810]/40 rounded-xl p-3 flex items-center gap-3 text-sm">
-            <span className="text-xl">📧</span>
-            <p className="text-gray-700 dark:text-gray-300">
-              Confirmation email sent to <span className="font-semibold text-[#F19A0E]">{user.email}</span>
-            </p>
+          {/* Totals */}
+          <div className="border-t border-dashed border-gray-200 pt-4 space-y-2">
+            <div className="flex justify-between text-sm text-gray-500">
+              <span>Subtotal</span>
+              <span>{order.totalPrice?.toLocaleString()} ETB</span>
+            </div>
+            <div className="flex justify-between text-sm text-gray-500">
+              <span>Shipping</span>
+              <span className="text-green-600 font-medium">Free 🎁</span>
+            </div>
+            <div className="flex justify-between text-sm text-gray-500">
+              <span>Tax</span>
+              <span>Included</span>
+            </div>
+            <div className="flex justify-between font-black text-lg text-[#2C1810] pt-2 border-t border-gray-200">
+              <span>Total Paid</span>
+              <span className="text-[#F19A0E]">{order.totalPrice?.toLocaleString()} ETB</span>
+            </div>
           </div>
+
+          {/* Transaction ID */}
+          <div className="mt-4 bg-gray-50 rounded-xl p-3 flex items-center justify-between">
+            <div>
+              <p className="text-[10px] text-gray-400">Transaction ID</p>
+              <p className="font-mono text-xs text-gray-600">{order.txnId}</p>
+            </div>
+            <span className="text-green-500 text-xl">🔒</span>
+          </div>
+
+          {/* Email note */}
+          <div className="mt-3 bg-[#FEF3E2] rounded-xl p-3 flex items-center gap-2 text-xs text-gray-600">
+            <span>📧</span>
+            <span>Confirmation sent to <strong className="text-[#F19A0E]">{user.email}</strong></span>
+          </div>
+
+          {/* Tear line */}
+          <div className="relative my-5">
+            <div className="border-t-2 border-dashed border-gray-200" />
+            <div className="absolute -left-6 top-1/2 -translate-y-1/2 w-5 h-5 bg-[#F5F0E8] rounded-full" />
+            <div className="absolute -right-6 top-1/2 -translate-y-1/2 w-5 h-5 bg-[#F5F0E8] rounded-full" />
+          </div>
+
+          {/* Barcode-style decoration */}
+          <div className="flex justify-center gap-0.5 mb-4 opacity-20">
+            {Array.from({ length: 40 }).map((_, i) => (
+              <div key={i} className="bg-[#2C1810] rounded-sm"
+                style={{ width: Math.random() > 0.5 ? 3 : 2, height: Math.random() > 0.7 ? 32 : 24 }} />
+            ))}
+          </div>
+
+          <p className="text-center text-[10px] text-gray-400">
+            🇪🇹 gebeya-B · Made in Ethiopia · Thank you for supporting local artisans
+          </p>
         </div>
+
+        {/* Flag stripe */}
+        <div className="h-1.5 w-full"
+          style={{ background: 'linear-gradient(90deg,#078930 33%,#FCDD09 33% 66%,#DA121A 66%)' }} />
       </div>
 
       {/* Actions */}
-      <div className="flex flex-col sm:flex-row gap-3">
+      <div className="flex flex-col sm:flex-row gap-3 mt-6">
         <Link to="/" className="flex-1 text-center bg-[#F19A0E] hover:bg-[#d97b08] text-white py-3.5 rounded-xl font-bold transition-colors">
           🏠 Back to Home
         </Link>
