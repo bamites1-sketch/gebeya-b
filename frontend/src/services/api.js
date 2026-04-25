@@ -1,10 +1,6 @@
 import axios from 'axios';
 
-// In production (Vercel), use the VITE_API_URL env variable.
-// In development, use the Vite proxy (/api → localhost:5001).
-const baseURL = import.meta.env.VITE_API_URL
-  ? `${import.meta.env.VITE_API_URL}/api`
-  : 'https://gebeya-b-api.onrender.com/api';
+const baseURL = 'https://gebeya-b-api.onrender.com/api';
 
 const api = axios.create({
   baseURL,
