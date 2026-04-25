@@ -24,16 +24,22 @@ export default function ProductsPage() {
     page:     parseInt(searchParams.get('page')) || 1,
   });
 
+  const [error, setError] = useState(false);
+
   const load = useCallback(async () => {
     setLoading(true);
+    setError(false);
     const params = {};
     Object.entries(filters).forEach(([k, v]) => { if (v) params[k] = v; });
     setSearchParams(params);
     try {
       const { data } = await api.get('/products', { params });
-      setProducts(data.products);
-      setTotal(data.total);
-      setPages(data.pages);
+      setProducts(data.products || []);
+      setTotal(data.total || 0);
+      setPages(data.pages || 1);
+    } catch {
+      setError(true);
+      setProducts([]);
     } finally {
       setLoading(false);
     }
@@ -89,6 +95,26 @@ export default function ProductsPage() {
           </div>
 
           <ProductGrid products={products} loading={loading} />
+
+          {/* Error / empty state */}
+          {!loading && error && (
+            <div className="text-center py-16 bg-white rounded-2xl shadow-sm">
+              <p className="text-4xl mb-3">⏳</p>
+              <p className="font-bold text-gray-700 mb-1">Backend is waking up...</p>
+              <p className="text-sm text-gray-400 mb-4">The server may take ~30 seconds to start. Please wait.</p>
+              <button onClick={load}
+                className="px-6 py-2.5 bg-[#F19A0E] text-white rounded-xl font-bold text-sm hover:bg-[#d97b08] transition-colors">
+                Try Again
+              </button>
+            </div>
+          )}
+
+          {!loading && !error && products.length === 0 && (
+            <div className="text-center py-16 bg-white rounded-2xl shadow-sm">
+              <p className="text-4xl mb-3">🇪🇹</p>
+              <p className="font-bold text-gray-700">No products yet. Check back soon!</p>
+            </div>
+          )}
 
           {/* Pagination */}
           {pages > 1 && (
