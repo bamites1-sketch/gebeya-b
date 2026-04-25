@@ -9,13 +9,7 @@ const app = express();
 
 // Middleware
 app.use(cors({
-  origin: [
-    'http://localhost:5173',
-    'http://localhost:5174',
-    'https://gebeya-b-ethiopia.netlify.app',
-    'https://gebeya-b-marketplace.netlify.app',
-    /\.netlify\.app$/,
-  ],
+  origin: true,
   credentials: true,
 }));
 app.use(express.json());
