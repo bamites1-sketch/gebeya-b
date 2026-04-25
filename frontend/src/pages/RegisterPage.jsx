@@ -1,14 +1,9 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
 import { useAuth } from '../context/AuthContext';
 import toast from 'react-hot-toast';
-import Input from '../components/ui/Input';
-import Button from '../components/ui/Button';
-import GebeyaLogo from '../components/ui/Logo';
 
 export default function RegisterPage() {
-  const { t } = useTranslation();
   const { register } = useAuth();
   const navigate = useNavigate();
   const [form, setForm] = useState({ name: '', email: '', password: '', confirm: '' });
@@ -31,72 +26,82 @@ export default function RegisterPage() {
     setLoading(true);
     try {
       await register(form.name, form.email, form.password);
-      toast.success(t('auth.register_success'));
+      toast.success('Account created successfully!');
       navigate('/');
     } catch (err) {
-      toast.error(err.response?.data?.message || 'Registration failed');
+      toast.error(err.response?.data?.message || 'Registration failed. Try again.');
     } finally {
       setLoading(false);
     }
   };
 
-  return (
-    <div className="min-h-[85vh] flex">
-      {/* Left decorative panel */}
-      <div className="hidden lg:flex flex-1 bg-gradient-to-br from-[#078930] via-[#2C1810] to-[#1a0e06] items-center justify-center relative overflow-hidden">
-        <div className="absolute inset-0 pattern-tibeb opacity-60 pointer-events-none" />
-        <div className="relative text-center text-white px-12">
-          <GebeyaLogo size="2xl" linkTo={null} animate glow className="justify-center mb-6" />
-          <h2 className="text-3xl font-black mb-3">Join Us</h2>
-          <p className="text-lg text-white/80 max-w-xs mx-auto leading-relaxed">
-            Discover and support Ethiopian artisans
-          </p>
-          <div className="mt-10 space-y-3 text-left">
-            {['✓ Free account, always', '✓ Save your wishlist', '✓ Track your orders', '✓ Exclusive deals'].map((item) => (
-              <div key={item} className="bg-white/10 backdrop-blur-sm rounded-xl px-4 py-3 text-sm font-medium">
-                {item}
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
+  const Field = ({ label, error, ...props }) => (
+    <div>
+      <label className="block text-sm font-medium text-gray-700 mb-1">{label}</label>
+      <input
+        className={`w-full px-4 py-3 border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#F19A0E] transition-colors ${error ? 'border-red-400' : 'border-gray-200'}`}
+        {...props}
+      />
+      {error && <p className="text-xs text-red-500 mt-1">{error}</p>}
+    </div>
+  );
 
-      {/* Right form panel */}
-      <div className="flex-1 flex items-center justify-center px-4 py-12 bg-white dark:bg-gray-900">
-        <div className="w-full max-w-md animate-slide-up">
-          <div className="mb-10">
-            <Link to="/" className="inline-flex items-center gap-2.5">
-              <GebeyaLogo size="md" linkTo={null} glow={false} />
-              <div className="flex flex-col leading-none">
-                <span className="text-xl font-black text-[#F19A0E]">ገበያ-B</span>
-                <span className="text-[9px] font-semibold text-gray-400 uppercase tracking-widest">Made in Ethiopia</span>
-              </div>
-            </Link>
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-white mt-4">{t('auth.register')}</h1>
-            <p className="text-gray-500 dark:text-gray-400 mt-1">Create your account in seconds.</p>
-          </div>
+  return (
+    <div className="min-h-screen bg-[#F5F0E8] flex items-center justify-center px-4 py-12">
+      <div className="w-full max-w-md">
+
+        {/* Logo / Brand */}
+        <div className="text-center mb-8">
+          <Link to="/" className="inline-flex flex-col items-center gap-2">
+            <img src="/logo.jpg" alt="gebeya-B"
+              className="h-16 w-16 object-contain rounded-full shadow-lg"
+              onError={(e) => { e.currentTarget.style.display = 'none'; }} />
+            <span className="text-2xl font-black text-[#2C1810]">gebeya-B</span>
+            <span className="text-xs text-gray-400 uppercase tracking-widest">Ethiopian Cultural Marketplace</span>
+          </Link>
+        </div>
+
+        {/* Card */}
+        <div className="bg-white rounded-2xl shadow-sm p-8">
+          <h1 className="text-xl font-bold text-[#2C1810] mb-1">Create Account</h1>
+          <p className="text-sm text-gray-400 mb-6">Join gebeya-B in seconds.</p>
 
           <form onSubmit={handleSubmit} className="space-y-4">
-            <Input label={t('auth.name')} value={form.name}
+            <Field label="Full Name" value={form.name}
               onChange={(e) => setForm({ ...form, name: e.target.value })}
               error={errors.name} placeholder="Abebe Kebede" autoComplete="name" />
-            <Input label={t('auth.email')} type="email" value={form.email}
+
+            <Field label="Email" type="email" value={form.email}
               onChange={(e) => setForm({ ...form, email: e.target.value })}
               error={errors.email} placeholder="you@example.com" autoComplete="email" />
-            <Input label={t('auth.password')} type="password" value={form.password}
+
+            <Field label="Password" type="password" value={form.password}
               onChange={(e) => setForm({ ...form, password: e.target.value })}
               error={errors.password} placeholder="Min. 6 characters" autoComplete="new-password" />
-            <Input label={t('auth.confirm_password')} type="password" value={form.confirm}
+
+            <Field label="Confirm Password" type="password" value={form.confirm}
               onChange={(e) => setForm({ ...form, confirm: e.target.value })}
               error={errors.confirm} placeholder="Repeat password" autoComplete="new-password" />
-            <Button type="submit" loading={loading} className="w-full" size="lg">{t('auth.register')}</Button>
+
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full py-3 bg-[#078930] hover:bg-[#056b25] text-white font-bold rounded-xl transition-colors disabled:opacity-60 flex items-center justify-center gap-2"
+            >
+              {loading && <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />}
+              {loading ? 'Creating account...' : 'Create Account'}
+            </button>
           </form>
 
-          <p className="text-center text-sm text-gray-500 dark:text-gray-400 mt-8">
-            {t('auth.have_account')}{' '}
-            <Link to="/login" className="text-primary-600 font-semibold hover:underline">{t('auth.login')}</Link>
+          <p className="text-center text-sm text-gray-400 mt-6">
+            Already have an account?{' '}
+            <Link to="/login" className="text-[#F19A0E] font-semibold hover:underline">Sign in</Link>
           </p>
         </div>
+
+        {/* Flag stripe */}
+        <div className="h-1 w-full mt-6 rounded-full overflow-hidden"
+          style={{ background: 'linear-gradient(90deg,#078930 33%,#FCDD09 33% 66%,#DA121A 66%)' }} />
       </div>
     </div>
   );
