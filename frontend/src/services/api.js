@@ -4,7 +4,7 @@ import axios from 'axios';
 // In development, use the Vite proxy (/api → localhost:5001).
 const baseURL = import.meta.env.VITE_API_URL
   ? `${import.meta.env.VITE_API_URL}/api`
-  : '/api';
+  : 'https://gebeya-b-api.onrender.com/api';
 
 const api = axios.create({
   baseURL,
