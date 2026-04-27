@@ -10,3 +10,4 @@ router.delete('/clear', clearCart);
 router.delete('/:itemId', removeFromCart);
 
 module.exports = router;
+

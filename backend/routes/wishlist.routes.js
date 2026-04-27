@@ -7,3 +7,4 @@ router.get('/', getWishlist);
 router.post('/:productId', toggleWishlist);
 
 module.exports = router;
+

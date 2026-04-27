@@ -15,3 +15,4 @@ router.put('/:id', protect, adminOnly, upload.array('images', 5), updateProduct)
 router.delete('/:id', protect, adminOnly, deleteProduct);
 
 module.exports = router;
+

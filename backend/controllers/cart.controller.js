@@ -1,5 +1,4 @@
-const { PrismaClient } = require('@prisma/client');
-const prisma = new PrismaClient();
+const prisma = require('../lib/prisma');
 
 const getCart = async (req, res, next) => {
   try {
@@ -94,3 +93,4 @@ const clearCart = async (req, res, next) => {
 };
 
 module.exports = { getCart, addToCart, updateCartItem, removeFromCart, clearCart };
+

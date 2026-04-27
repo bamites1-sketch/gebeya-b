@@ -1,8 +1,6 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const { PrismaClient } = require('@prisma/client');
-
-const prisma = new PrismaClient();
+const prisma = require('../lib/prisma');
 
 const generateToken = (id) =>
   jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN || '7d' });
@@ -78,3 +76,4 @@ const updateProfile = async (req, res, next) => {
 };
 
 module.exports = { register, login, getMe, updateProfile };
+

@@ -1,5 +1,4 @@
-const { PrismaClient } = require('@prisma/client');
-const prisma = new PrismaClient();
+const prisma = require('../lib/prisma');
 
 const getProducts = async (req, res, next) => {
   try {
@@ -123,3 +122,4 @@ const deleteProduct = async (req, res, next) => {
 };
 
 module.exports = { getProducts, getProduct, getTrending, getRelated, createProduct, updateProduct, deleteProduct };
+

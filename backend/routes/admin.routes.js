@@ -1,9 +1,7 @@
 const router = require('express').Router();
 const { getAllOrders, updateOrderStatus } = require('../controllers/order.controller');
 const { protect, adminOnly } = require('../middleware/auth.middleware');
-const { PrismaClient } = require('@prisma/client');
-
-const prisma = new PrismaClient();
+const prisma = require('../lib/prisma');
 
 router.use(protect, adminOnly);
 
@@ -41,3 +39,4 @@ router.get('/stats', async (req, res, next) => {
 });
 
 module.exports = router;
+
