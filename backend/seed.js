@@ -2,9 +2,26 @@ const { PrismaClient } = require('@prisma/client');
 const bcrypt = require('bcryptjs');
 const prisma = new PrismaClient();
 
-// Helper to generate Unsplash image URLs
-function getImageUrl(keyword) {
-  return `https://source.unsplash.com/800x600/?${encodeURIComponent(keyword)}`;
+// Helper to generate Unsplash image URLs (using working direct photo IDs)
+// source.unsplash.com is deprecated — use images.unsplash.com with real photo IDs
+const UNSPLASH_IMAGES = {
+  clothing:    'https://images.unsplash.com/photo-1594736797933-d0501ba2fe65?w=800&q=80',
+  clothing2:   'https://images.unsplash.com/photo-1583391733956-6c78276477e2?w=800&q=80',
+  crafts:      'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&q=80',
+  crafts2:     'https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?w=800&q=80',
+  coffee:      'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=800&q=80',
+  coffee2:     'https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=800&q=80',
+  food:        'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=800&q=80',
+  jewelry:     'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=800&q=80',
+  jewelry2:    'https://images.unsplash.com/photo-1573408301185-9519f94816b5?w=800&q=80',
+  music:       'https://images.unsplash.com/photo-1510915361894-db8b60106cb1?w=800&q=80',
+  music2:      'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=800&q=80',
+  bag:         'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=800&q=80',
+  spice:       'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=800&q=80',
+};
+
+function getImageUrl(category) {
+  return UNSPLASH_IMAGES[category] || UNSPLASH_IMAGES.crafts;
 }
 
 // Ethiopian product dataset with auto-loaded images
@@ -292,12 +309,11 @@ async function seed() {
   // ── Insert products with auto-loaded images ─────────────────────
   console.log('📸 Auto-loading images from Unsplash...\n');
   for (const p of PRODUCTS) {
-    const images = p.localImage
-      ? [p.localImage]
-      : [
-          getImageUrl(p.imageSearchKeywords[0]),
-          getImageUrl(p.imageSearchKeywords[1] || p.imageSearchKeywords[0]),
-        ];
+    const cat = p.category;
+    const images = [
+      UNSPLASH_IMAGES[cat] || UNSPLASH_IMAGES.crafts,
+      UNSPLASH_IMAGES[cat + '2'] || UNSPLASH_IMAGES[cat] || UNSPLASH_IMAGES.crafts,
+    ];
 
     await prisma.product.create({
       data: {
