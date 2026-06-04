@@ -96,21 +96,13 @@ export default function CheckoutPage() {
     if (!validate()) return;
     setStep('processing');
 
-    // Simulate 2-second processing delay
-    await new Promise((r) => setTimeout(r, 2000));
-
     try {
-      // Create real order in DB
-      const { data } = await api.post('/orders');
-      await fetchCart();
-
-      const txnId  = `TXN-${Date.now()}-${Math.floor(Math.random() * 9000 + 1000)}`;
-      const orderId = `GEB-${data.id}-${Date.now().toString().slice(-4)}`;
-
-      setOrder({ ...data, txnId, orderId, paymentMethod: method });
-      setStep('success');
+      // Initialize Chapa payment
+      const { data } = await api.post('/payments/initialize');
+      // Redirect to Chapa hosted checkout
+      window.location.href = data.checkout_url;
     } catch (err) {
-      toast.error(err.response?.data?.message || 'Order failed');
+      toast.error(err.response?.data?.message || 'Payment initialization failed');
       setStep('form');
     }
   };
@@ -437,17 +429,16 @@ export default function CheckoutPage() {
             </motion.div>
           </AnimatePresence>
 
-          {/* Pay button */}
           <button
             onClick={handlePay}
             className="w-full bg-[#F19A0E] hover:bg-[#d97b08] text-white py-4 rounded-2xl font-black text-lg transition-all shadow-lg shadow-[#F19A0E]/30 hover:-translate-y-0.5 hover:shadow-xl flex items-center justify-center gap-3"
           >
             <span>🔒</span>
-            {method === 'cod' ? 'Place Order' : `Pay ${total.toLocaleString()} ETB`}
+            {method === 'cod' ? 'Place Order' : `Pay ${total.toLocaleString()} ETB via Chapa`}
           </button>
 
           <p className="text-center text-xs text-gray-400">
-            🔒 Secured · 🇪🇹 gebeya-B · All transactions are simulated for demo
+            🔒 Secured by Chapa · 🇪🇹 gebeya-B · Telebirr · CBE · Cards accepted
           </p>
         </div>
 

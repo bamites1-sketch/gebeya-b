@@ -15,6 +15,7 @@ import ProfilePage from './pages/ProfilePage';
 import AdminPage from './pages/AdminPage';
 import CheckoutPage from './pages/CheckoutPage';
 import AboutPage from './pages/AboutPage';
+import PaymentSuccessPage from './pages/PaymentSuccessPage';
 
 export default function App() {
   return (
@@ -35,6 +36,7 @@ export default function App() {
                 <Route path="/admin" element={<AdminPage />} />
                 <Route path="/checkout" element={<CheckoutPage />} />
                 <Route path="/about" element={<AboutPage />} />
+                <Route path="/payment-success" element={<PaymentSuccessPage />} />
               </Routes>
             </Layout>
           </WishlistProvider>

@@ -86,6 +86,7 @@ model Order {
   items      OrderItem[]
   totalPrice Float
   status     OrderStatus @default(PENDING)
+  txRef      String?
   createdAt  DateTime    @default(now())
   updatedAt  DateTime    @updatedAt
 }
