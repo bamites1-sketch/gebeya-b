@@ -94,8 +94,8 @@ export default function Footer() {
             </li>
             <li className="flex items-start gap-2">
               <span className="shrink-0 mt-0.5">📧</span>
-              <a href="mailto:Beamlaktesfahunn@gmail.com" className="hover:text-[#F19A0E] transition-colors break-all">
-                Beamlaktesfahunn@gmail.com
+              <a href="mailto:bamites1@gmail.com" className="hover:text-[#F19A0E] transition-colors break-all">
+                bamites1@gmail.com
               </a>
             </li>
             <li className="flex items-start gap-2">
@@ -122,7 +122,7 @@ export default function Footer() {
           <div className="flex items-center gap-2">
             <img src="/logo.jpg" alt="" className="h-5 w-5 object-contain rounded-full opacity-40"
               onError={(e) => { e.currentTarget.style.display='none'; }} />
-            <p>© {new Date().getFullYear()} gebeya-B. Built by <a href="mailto:Beamlaktesfahunn@gmail.com" className="text-[#F19A0E]/70 hover:text-[#F19A0E]">Beamlak Tesfahun</a>.</p>
+            <p>© {new Date().getFullYear()} gebeya-B. Built by <a href="mailto:bamites1@gmail.com" className="text-[#F19A0E]/70 hover:text-[#F19A0E]">Beamlak Tesfahun</a>.</p>
           </div>
           <p>Made with ❤️ for Ethiopian artisans · <span className="text-[#F19A0E]/60">በኢትዮጵያ የተመረተ</span></p>
         </div>

@@ -63,7 +63,7 @@ export default function AboutPage() {
                   {[
                     { icon: '🏫', label: 'University', value: 'Wollo University, Kombolcha Campus' },
                     { icon: '📍', label: 'Location',   value: 'Kombolcha, Ethiopia' },
-                    { icon: '📧', label: 'Email',      value: 'Beamlaktesfahunn@gmail.com', href: 'mailto:Beamlaktesfahunn@gmail.com' },
+                    { icon: '📧', label: 'Email', value: 'bamites1@gmail.com', href: 'mailto:bamites1@gmail.com' },
                     { icon: '🐙', label: 'GitHub',   value: 'Beamlak (bamites1-sketch)', href: 'https://github.com/bamites1-sketch' },
                     { icon: '✈️', label: 'Telegram', value: '@BAM3_6', href: 'https://t.me/BAM3_6' },
                   ].map(({ icon, label, value, href }) => (
@@ -86,7 +86,7 @@ export default function AboutPage() {
                 </div>
 
                 <div className="flex flex-wrap gap-3 justify-center sm:justify-start">
-                  <a href="mailto:Beamlaktesfahunn@gmail.com"
+                  <a href="mailto:bamites1@gmail.com"
                     className="inline-flex items-center gap-2 bg-[#F19A0E] hover:bg-[#d97b08] text-white px-5 py-2.5 rounded-xl text-sm font-bold transition-colors">
                     📧 Send Email
                   </a>

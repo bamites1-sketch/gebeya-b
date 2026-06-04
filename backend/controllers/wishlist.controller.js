@@ -1,4 +1,5 @@
-const prisma = require('../lib/prisma');
+const { PrismaClient } = require('@prisma/client');
+const prisma = new PrismaClient();
 
 const getWishlist = async (req, res, next) => {
   try {
@@ -35,4 +36,3 @@ const toggleWishlist = async (req, res, next) => {
 };
 
 module.exports = { getWishlist, toggleWishlist };
-
