@@ -9,10 +9,17 @@ import { getFirstImage } from '../utils/images';
 
 export default function CheckoutPage() {
   const { t } = useTranslation();
-  const { cart, total } = useCart();
+  const { cart, total, loading: cartLoading } = useCart();
   const { user } = useAuth();
   const [loading, setLoading] = useState(false);
   const items = cart?.items || [];
+
+  // Show loading while cart is being fetched
+  if (cartLoading) return (
+    <div className="min-h-[60vh] flex items-center justify-center">
+      <div className="w-10 h-10 border-4 border-[#F19A0E] border-t-transparent rounded-full animate-spin" />
+    </div>
+  );
 
   if (!user) return (
     <div className="max-w-lg mx-auto px-4 py-24 text-center">
@@ -97,7 +104,7 @@ export default function CheckoutPage() {
             className="w-full bg-[#2C1810] hover:bg-[#1a0e06] text-white py-4 rounded-2xl font-black text-lg transition-all shadow-lg hover:-translate-y-0.5 hover:shadow-xl disabled:opacity-60 flex items-center justify-center gap-3">
             {loading
               ? <><span className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" /> Redirecting to Chapa...</>
-              : <><span>🇪🇹</span> Pay {total.toLocaleString()} ETB via Chapa</>
+              : <><span>🇪🇹</span> Pay {(total || 0).toLocaleString()} ETB via Chapa</>
             }
           </button>
 
@@ -134,7 +141,7 @@ export default function CheckoutPage() {
               <div className="border-t dark:border-gray-700 pt-4 space-y-2 text-sm">
                 <div className="flex justify-between text-gray-600 dark:text-gray-400">
                   <span>Subtotal</span>
-                  <span>{total.toLocaleString()} ETB</span>
+                  <span>{(total || 0).toLocaleString()} ETB</span>
                 </div>
                 <div className="flex justify-between text-gray-600 dark:text-gray-400">
                   <span>Shipping</span>
@@ -142,7 +149,7 @@ export default function CheckoutPage() {
                 </div>
                 <div className="flex justify-between font-black text-gray-900 dark:text-white text-base pt-2 border-t dark:border-gray-700">
                   <span>Total</span>
-                  <span className="text-[#F19A0E]">{total.toLocaleString()} ETB</span>
+                  <span className="text-[#F19A0E]">{(total || 0).toLocaleString()} ETB</span>
                 </div>
               </div>
             </div>
