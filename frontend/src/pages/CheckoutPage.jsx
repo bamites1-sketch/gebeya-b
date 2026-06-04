@@ -49,7 +49,7 @@ export default function CheckoutPage() {
     <div className="max-w-5xl mx-auto px-4 py-10">
       <div className="mb-8">
         <h1 className="text-3xl font-black text-[#2C1810] dark:text-white">Checkout</h1>
-        <p className="text-gray-500 dark:text-gray-400 mt-1">Complete your order securely via Chapa</p>
+        <p className="text-gray-500 dark:text-gray-400 mt-1">Complete your order securely via Chapa 🇪🇹</p>
       </div>
 
       <div className="grid lg:grid-cols-5 gap-8">
