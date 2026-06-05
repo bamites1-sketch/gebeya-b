@@ -8,6 +8,7 @@ import ProductGrid from '../components/product/ProductGrid';
 import { Skeleton } from '../components/ui/Skeleton';
 import Badge from '../components/ui/Badge';
 import { resolveImages } from '../utils/images';
+import ProductReviews from '../components/product/ProductReviews';
 
 export default function ProductDetailPage() {
   const { id } = useParams();
@@ -187,6 +188,10 @@ export default function ProductDetailPage() {
           <ProductGrid products={related} loading={false} />
         </section>
       )}
+
+      {/* Reviews */}
+      <ProductReviews productId={parseInt(id)} />
+
     </div>
   );
 }
