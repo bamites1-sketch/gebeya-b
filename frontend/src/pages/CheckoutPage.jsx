@@ -76,13 +76,21 @@ export default function CheckoutPage() {
             <p className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3">Accepted Payment Methods</p>
             <div className="grid grid-cols-2 gap-3">
               {[
-                { icon: '📱', label: 'Telebirr', sub: 'Ethiopian mobile money' },
-                { icon: '🏦', label: 'CBE Birr', sub: 'Commercial Bank of Ethiopia' },
-                { icon: '🏧', label: 'Awash Bank', sub: 'Awash mobile banking' },
-                { icon: '💳', label: 'Bank of Abyssinia', sub: 'BOA mobile banking' },
-              ].map(({ icon, label, sub }) => (
-                <div key={label} className="flex items-center gap-3 p-3 bg-[#F5F0E8] rounded-xl">
-                  <span className="text-xl">{icon}</span>
+                { logo: '/images/telebirr.png', label: 'Telebirr',           sub: 'Ethiopian mobile money',        bg: 'bg-blue-50',   fallback: '📱' },
+                { logo: '/images/cbe.png',      label: 'CBE Birr',           sub: 'Commercial Bank of Ethiopia',   bg: 'bg-yellow-50', fallback: '🏦' },
+                { logo: '/images/boa.png',      label: 'Bank of Abyssinia',  sub: 'BOA mobile banking',            bg: 'bg-amber-50',  fallback: '💳' },
+                { logo: '/images/awash.png',    label: 'Awash Bank',         sub: 'Awash mobile banking',          bg: 'bg-orange-50', fallback: '🏧' },
+              ].map(({ logo, label, sub, bg, fallback }) => (
+                <div key={label} className={`flex items-center gap-3 p-3 ${bg} rounded-xl border border-gray-100`}>
+                  <div className="w-10 h-10 rounded-lg overflow-hidden shrink-0 bg-white flex items-center justify-center shadow-sm">
+                    <img
+                      src={logo}
+                      alt={label}
+                      className="w-full h-full object-contain p-1"
+                      onError={(e) => { e.currentTarget.style.display = 'none'; e.currentTarget.nextElementSibling.style.display = 'block'; }}
+                    />
+                    <span style={{ display: 'none' }} className="text-xl">{fallback}</span>
+                  </div>
                   <div>
                     <p className="text-sm font-bold text-[#2C1810] leading-tight">{label}</p>
                     <p className="text-[10px] text-gray-400 leading-tight">{sub}</p>
