@@ -71,11 +71,9 @@ const initializePayment = async (req, res, next) => {
       title: 'gebeya-B Order',
       description: `Order ${order.id}`,
     };
-
     const chapaRes = await chapaRequest('POST', '/v1/transaction/initialize', chapaPayload);
     console.log('Chapa response:', JSON.stringify(chapaRes));
     if (chapaRes.status !== 'success') {
-      console.log('Chapa payload sent:', JSON.stringify(chapaPayload));
       return res.status(400).json({ message: chapaRes.message || JSON.stringify(chapaRes) });
     }
     res.json({ checkout_url: chapaRes.data.checkout_url, tx_ref: txRef, order_id: order.id });
@@ -90,7 +88,6 @@ const verifyPayment = async (req, res, next) => {
     const chapaRes = await chapaRequest('GET', `/v1/transaction/verify/${tx_ref}`);
     console.log('Verify response:', JSON.stringify(chapaRes));
 
-    // Find the order regardless of payment status (for demo purposes)
     const order = await prisma.order.findFirst({
       where: { txRef: tx_ref },
       include: { items: { include: { product: true } } },
@@ -100,17 +97,14 @@ const verifyPayment = async (req, res, next) => {
       return res.status(404).json({ message: 'Order not found' });
     }
 
-    // If already processed, return it
     if (order.status === 'PROCESSING') {
       return res.json({ message: 'Payment verified', order });
     }
 
-    // Accept success or treat cancelled as success for demo
     const chapaStatus = chapaRes?.data?.status;
     const isPaid = chapaRes.status === 'success' &&
       ['success', 'completed', 'COMPLETED'].includes(chapaStatus);
 
-    // Update order status
     const updated = await prisma.order.update({
       where: { id: order.id },
       data: { status: isPaid ? 'PROCESSING' : 'PENDING' },
@@ -118,7 +112,6 @@ const verifyPayment = async (req, res, next) => {
     });
 
     if (isPaid) {
-      // Decrement stock only if actually paid
       await Promise.all(
         order.items.map((item) =>
           prisma.product.update({
@@ -127,36 +120,11 @@ const verifyPayment = async (req, res, next) => {
           })
         )
       );
-      // Clear cart
       const cart = await prisma.cart.findUnique({ where: { userId: order.userId } });
       if (cart) await prisma.cartItem.deleteMany({ where: { cartId: cart.id } });
     }
 
-    // Always return the order so UI can show it
     res.json({ message: isPaid ? 'Payment verified' : 'Order created', order: updated });
-  } catch (error) {
-    next(error);
-  }
-};
-    const order = await prisma.order.findFirst({
-      where: { txRef: tx_ref },
-      include: { items: { include: { product: true } } },
-    });
-    if (!order) return res.status(404).json({ message: 'Order not found' });
-    if (order.status === 'PROCESSING') return res.json({ message: 'Already verified', order });
-    const updated = await prisma.order.update({
-      where: { id: order.id },
-      data: { status: 'PROCESSING' },
-      include: { items: { include: { product: true } } },
-    });
-    await Promise.all(
-      order.items.map((item) =>
-        prisma.product.update({ where: { id: item.productId }, data: { stock: { decrement: item.quantity } } })
-      )
-    );
-    const cart = await prisma.cart.findUnique({ where: { userId: order.userId } });
-    if (cart) await prisma.cartItem.deleteMany({ where: { cartId: cart.id } });
-    res.json({ message: 'Payment verified', order: updated });
   } catch (error) {
     next(error);
   }
