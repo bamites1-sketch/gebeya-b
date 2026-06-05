@@ -26,7 +26,8 @@ export default function CheckoutPage() {
         setLoading(false);
       }
     } catch (err) {
-      toast.error(err?.response?.data?.message || 'Payment initialization failed');
+      const msg = err?.response?.data?.message || err?.message || 'Payment initialization failed';
+      toast.error(typeof msg === 'string' ? msg : 'Payment initialization failed');
       setLoading(false);
     }
   };

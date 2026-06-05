@@ -59,7 +59,7 @@ const initializePayment = async (req, res, next) => {
     });
     const txRef = `GEB-${order.id}-${Date.now()}`;
     await prisma.order.update({ where: { id: order.id }, data: { txRef } });
-    const chapaRes = await chapaRequest('POST', '/v1/transaction/initialize', {
+    const chapaPayload = {
       amount: String(Math.round(totalPrice)),
       currency: 'ETB',
       email: req.user.email,
@@ -68,9 +68,11 @@ const initializePayment = async (req, res, next) => {
       tx_ref: txRef,
       callback_url: `${BACKEND_URL}/api/payments/callback/${txRef}`,
       return_url: `${FRONTEND_URL}/payment-success?tx_ref=${txRef}`,
-      'customization[title]': 'gebeya-B Order',
-      'customization[description]': `Order ${order.id} - Ethiopian Marketplace`,
-    });
+      title: 'gebeya-B Order',
+      description: `Order ${order.id}`,
+    };
+
+    const chapaRes = await chapaRequest('POST', '/v1/transaction/initialize', chapaPayload);
     if (chapaRes.status !== 'success') {
       return res.status(400).json({ message: chapaRes.message || 'Chapa initialization failed' });
     }
