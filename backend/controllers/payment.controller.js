@@ -73,8 +73,10 @@ const initializePayment = async (req, res, next) => {
     };
 
     const chapaRes = await chapaRequest('POST', '/v1/transaction/initialize', chapaPayload);
+    console.log('Chapa response:', JSON.stringify(chapaRes));
     if (chapaRes.status !== 'success') {
-      return res.status(400).json({ message: chapaRes.message || 'Chapa initialization failed' });
+      console.log('Chapa payload sent:', JSON.stringify(chapaPayload));
+      return res.status(400).json({ message: chapaRes.message || JSON.stringify(chapaRes) });
     }
     res.json({ checkout_url: chapaRes.data.checkout_url, tx_ref: txRef, order_id: order.id });
   } catch (error) {
