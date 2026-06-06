@@ -13,7 +13,7 @@ const applyToSell = async (req, res, next) => {
         shopName: shopName.trim(),
         bio: bio?.trim() || null,
       },
-      select: { id: true, name: true, email: true, role: true, shopName: true, bio: true },
+      select: { id: true, name: true, email: true, role: true, shopName: true, bio: true, verified: true },
     });
     res.json({ message: 'Seller account activated', user });
   } catch (error) {
@@ -32,9 +32,32 @@ const updateSellerProfile = async (req, res, next) => {
     const user = await prisma.user.update({
       where: { id: req.user.id },
       data,
-      select: { id: true, name: true, email: true, role: true, shopName: true, bio: true },
+      select: { id: true, name: true, email: true, role: true, shopName: true, bio: true, verified: true },
     });
     res.json(user);
+  } catch (error) {
+    next(error);
+  }
+};
+
+function buildAiDescription({ name, category, region, condition, storage }) {
+  const regionLabel = region && region !== 'addis_ababa'
+    ? ` from the ${region.replace(/_/g, ' ')} region`
+    : '';
+  const specs = [condition, storage].filter(Boolean);
+  const specsLine = specs.length ? ` Features: ${specs.join(', ')}.` : '';
+  const conditionLine = condition ? ` This item is in ${condition.toLowerCase()} condition.` : '';
+
+  return `${name.trim()} is a quality ${category || 'product'}${regionLabel} listed on gebeya-B.${conditionLine}${specsLine} Carefully described by the seller so you know exactly what you are buying. Great value, secure checkout, and trusted Ethiopian marketplace service.`;
+}
+
+const generateAiDescription = async (req, res, next) => {
+  try {
+    const { name, category, region, condition, storage } = req.body;
+    if (!name?.trim()) return res.status(400).json({ message: 'Product name is required' });
+
+    const description = buildAiDescription({ name, category, region, condition, storage });
+    res.json({ description });
   } catch (error) {
     next(error);
   }
@@ -142,4 +165,13 @@ const getSellerStats = async (req, res, next) => {
   }
 };
 
-module.exports = { applyToSell, updateSellerProfile, getMyProducts, createSellerProduct, updateSellerProduct, deleteSellerProduct, getSellerStats };
+module.exports = {
+  applyToSell,
+  updateSellerProfile,
+  getMyProducts,
+  createSellerProduct,
+  updateSellerProduct,
+  deleteSellerProduct,
+  getSellerStats,
+  generateAiDescription,
+};

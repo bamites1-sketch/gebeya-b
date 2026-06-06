@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useCart } from '../../context/CartContext';
 import { useWishlist } from '../../context/WishlistContext';
 import { MadeInEthiopiaBadge } from '../ui/Logo';
+import VerifiedSellerBadge from '../ui/VerifiedSellerBadge';
 import { getFirstImage } from '../../utils/images';
 
 export default function ProductCard({ product }) {
@@ -64,11 +65,14 @@ export default function ProductCard({ product }) {
             {product.name}
           </h3>
         </Link>
-        {product.region && (
-          <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5 capitalize">
-            📍 {t(`regions.${product.region}`) || product.region}
-          </p>
-        )}
+        <div className="flex items-center gap-2 mt-0.5 flex-wrap">
+          {product.region && (
+            <p className="text-xs text-gray-400 dark:text-gray-500 capitalize">
+              📍 {t(`regions.${product.region}`) || product.region}
+            </p>
+          )}
+          {product.seller?.verified && <VerifiedSellerBadge />}
+        </div>
 
         <div className="flex items-center justify-between mt-auto pt-3">
           <div>

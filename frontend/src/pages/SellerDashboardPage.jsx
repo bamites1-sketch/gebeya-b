@@ -1,13 +1,21 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useAuth } from '../context/AuthContext';
 import api from '../services/api';
 import toast from 'react-hot-toast';
 import { getFirstImage } from '../utils/images';
+import VerifiedSellerBadge from '../components/ui/VerifiedSellerBadge';
 
 const CATEGORIES = ['clothing', 'crafts', 'accessories', 'jewelry', 'art', 'food', 'music'];
 const REGIONS = ['addis_ababa', 'oromia', 'amhara', 'tigray', 'snnpr', 'somali', 'afar', 'harari'];
+
+const CONDITIONS = ['New', 'Used', 'Refurbished', 'Like New'];
+
+async function fetchAiDescription(fields) {
+  const { data } = await api.post('/seller/ai-description', fields);
+  return data.description;
+}
 
 function ProductModal({ product, onClose, onSaved }) {
   const [form, setForm] = useState({
@@ -17,11 +25,15 @@ function ProductModal({ product, onClose, onSaved }) {
     category: product?.category || 'clothing',
     region: product?.region || 'addis_ababa',
     stock: product?.stock ?? '',
+    condition: '',
+    storage: '',
     imageUrl: '',
   });
   const [images, setImages] = useState([]);
   const [previews, setPreviews] = useState([]);
   const [saving, setSaving] = useState(false);
+  const [generatingDesc, setGeneratingDesc] = useState(false);
+  const descriptionTouched = useRef(Boolean(product?.description));
 
   const handleImages = (e) => {
     const files = Array.from(e.target.files).slice(0, 5);
@@ -29,14 +41,56 @@ function ProductModal({ product, onClose, onSaved }) {
     setPreviews(files.map((f) => URL.createObjectURL(f)));
   };
 
+  useEffect(() => {
+    if (product || descriptionTouched.current) return;
+    if (!form.name.trim() || !form.condition.trim()) return;
+
+    const timer = setTimeout(async () => {
+      setGeneratingDesc(true);
+      try {
+        const description = await fetchAiDescription({
+          name: form.name,
+          category: form.category,
+          region: form.region,
+          condition: form.condition,
+          storage: form.storage,
+        });
+        setForm((f) => ({ ...f, description }));
+      } catch {
+        // silent — manual generate still available
+      } finally {
+        setGeneratingDesc(false);
+      }
+    }, 600);
+
+    return () => clearTimeout(timer);
+  }, [form.name, form.condition, form.storage, form.category, form.region, product]);
+
   const handleSave = async (e) => {
     e.preventDefault();
     setSaving(true);
     try {
+      let description = form.description;
+      if (!description?.trim() && form.name.trim()) {
+        try {
+          description = await fetchAiDescription({
+            name: form.name,
+            category: form.category,
+            region: form.region,
+            condition: form.condition,
+            storage: form.storage,
+          });
+        } catch {
+          toast.error('Could not generate description');
+          setSaving(false);
+          return;
+        }
+      }
+
       const fd = new FormData();
-      // Append all form fields except imageUrl
-      const { imageUrl, ...formData } = form;
-      Object.entries(formData).forEach(([k, v]) => fd.append(k, v));
+      const { imageUrl, condition, storage, ...formData } = form;
+      const payload = { ...formData, description };
+      Object.entries(payload).forEach(([k, v]) => fd.append(k, v));
 
       if (images.length > 0) {
         // File uploads take priority
@@ -73,7 +127,7 @@ function ProductModal({ product, onClose, onSaved }) {
         </div>
         <form onSubmit={handleSave} className="p-6 space-y-4">
           {[
-            { label: 'Product Name', key: 'name', placeholder: 'e.g. Habesha Kemis', required: true },
+            { label: 'Product Name', key: 'name', placeholder: 'e.g. iPhone 13', required: true },
             { label: 'Price (ETB)', key: 'price', type: 'number', min: '0', required: true },
             { label: 'Stock', key: 'stock', type: 'number', min: '0' },
           ].map(({ label, key, ...rest }) => (
@@ -84,10 +138,59 @@ function ProductModal({ product, onClose, onSaved }) {
                 {...rest} />
             </div>
           ))}
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="text-sm font-semibold text-gray-700 dark:text-gray-300 block mb-1">Condition</label>
+              <select value={form.condition} onChange={(e) => setForm({ ...form, condition: e.target.value })}
+                className="w-full px-3 py-2.5 border dark:border-gray-600 rounded-xl text-sm dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#F19A0E]">
+                <option value="">Select condition</option>
+                {CONDITIONS.map((c) => <option key={c} value={c}>{c}</option>)}
+              </select>
+            </div>
+            <div>
+              <label className="text-sm font-semibold text-gray-700 dark:text-gray-300 block mb-1">Storage / Size</label>
+              <input value={form.storage} onChange={(e) => setForm({ ...form, storage: e.target.value })}
+                placeholder="e.g. 128GB"
+                className="w-full px-3 py-2.5 border dark:border-gray-600 rounded-xl text-sm dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#F19A0E]" />
+            </div>
+          </div>
+          {/* AI Description Generator */}
           <div>
-            <label className="text-sm font-semibold text-gray-700 dark:text-gray-300 block mb-1">Description</label>
-            <textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })}
-              rows={3} required placeholder="Describe your product..."
+            <div className="flex items-center justify-between mb-1">
+              <label className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+                Description {generatingDesc && <span className="text-xs text-[#F19A0E] font-normal">(generating…)</span>}
+              </label>
+              {form.name && (
+                <button type="button"
+                  onClick={async () => {
+                    if (!form.name.trim()) { toast.error('Enter product name first'); return; }
+                    setGeneratingDesc(true);
+                    try {
+                      const description = await fetchAiDescription({
+                        name: form.name,
+                        category: form.category,
+                        region: form.region,
+                        condition: form.condition,
+                        storage: form.storage,
+                      });
+                      descriptionTouched.current = false;
+                      setForm((f) => ({ ...f, description }));
+                      toast.success('Description generated ✨');
+                    } catch {
+                      toast.error('Could not generate description');
+                    } finally {
+                      setGeneratingDesc(false);
+                    }
+                  }}
+                  className="flex items-center gap-1 text-xs text-[#F19A0E] hover:underline font-bold"
+                >
+                  ✨ AI Generate
+                </button>
+              )}
+            </div>
+            <textarea value={form.description}
+              onChange={(e) => { descriptionTouched.current = true; setForm({ ...form, description: e.target.value }); }}
+              rows={3} required placeholder="Auto-generated when you enter name, condition & storage…"
               className="w-full px-3 py-2.5 border dark:border-gray-600 rounded-xl text-sm dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#F19A0E] resize-none" />
           </div>
           <div className="grid grid-cols-2 gap-3">
@@ -273,7 +376,10 @@ export default function SellerDashboardPage() {
           <h1 className="text-2xl font-black text-gray-900 dark:text-white">
             {user.shopName || 'Seller Dashboard'}
           </h1>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">🇪🇹 gebeya-B Seller</p>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5 flex items-center gap-2">
+            🇪🇹 gebeya-B Seller
+            {user.verified && <VerifiedSellerBadge />}
+          </p>
         </div>
         <div className="flex gap-2">
           {TABS.map(({ key, icon, label }) => (

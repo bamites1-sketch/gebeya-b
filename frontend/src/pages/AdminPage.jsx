@@ -121,6 +121,7 @@ export default function AdminPage() {
   const [stats, setStats] = useState(null);
   const [products, setProducts] = useState([]);
   const [orders, setOrders] = useState([]);
+  const [sellers, setSellers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [editProduct, setEditProduct] = useState(null);
   const [showForm, setShowForm] = useState(false);
@@ -134,14 +135,16 @@ export default function AdminPage() {
   const loadData = async () => {
     setLoading(true);
     try {
-      const [s, p, o] = await Promise.all([
+      const [s, p, o, u] = await Promise.all([
         api.get('/admin/stats'),
         api.get('/products?limit=100'),
         api.get('/admin/orders'),
+        api.get('/admin/users'),
       ]);
       setStats(s.data);
       setProducts(p.data.products || []);
       setOrders(o.data || []);
+      setSellers((u.data || []).filter((user) => user.role === 'SELLER'));
     } catch {
       toast.error('Failed to load data');
     } finally {
@@ -166,10 +169,21 @@ export default function AdminPage() {
     p.category.toLowerCase().includes(search.toLowerCase())
   );
 
+  const handleVerifySeller = async (id, verified) => {
+    try {
+      const { data } = await api.put(`/admin/users/${id}/verify`, { verified });
+      setSellers((prev) => prev.map((s) => (s.id === id ? { ...s, verified: data.verified } : s)));
+      toast.success(verified ? 'Seller verified ✅' : 'Verification removed');
+    } catch {
+      toast.error('Failed to update seller');
+    }
+  };
+
   const TABS = [
     { key: 'dashboard', icon: '📊', label: t('admin.dashboard') },
     { key: 'products', icon: '🛍️', label: t('admin.products') },
     { key: 'orders', icon: '📦', label: t('admin.orders') },
+    { key: 'sellers', icon: '✅', label: 'Sellers' },
   ];
 
   return (
@@ -373,6 +387,57 @@ export default function AdminPage() {
                   </tbody>
                 </table>
               </div>
+            )}
+          </div>
+        )}
+
+        {/* ── Sellers ── */}
+        {tab === 'sellers' && (
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm overflow-hidden">
+            <div className="px-6 py-4 border-b dark:border-gray-700">
+              <h3 className="font-bold text-gray-900 dark:text-white">Seller Verification</h3>
+              <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">Verify trusted sellers to show the Verified Seller badge</p>
+            </div>
+            {loading ? (
+              <div className="p-6 space-y-3">{Array.from({ length: 4 }).map((_, i) => <Skeleton key={i} className="h-12" />)}</div>
+            ) : sellers.length === 0 ? (
+              <div className="p-12 text-center text-gray-500">No sellers yet</div>
+            ) : (
+              <table className="w-full text-sm">
+                <thead className="bg-gray-50 dark:bg-gray-700/50">
+                  <tr>{['Shop', 'Email', 'Status', 'Action'].map((h) => (
+                    <th key={h} className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">{h}</th>
+                  ))}</tr>
+                </thead>
+                <tbody className="divide-y dark:divide-gray-700">
+                  {sellers.map((s) => (
+                    <tr key={s.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/30">
+                      <td className="px-6 py-4">
+                        <p className="font-medium text-gray-900 dark:text-white">{s.shopName || s.name}</p>
+                        <p className="text-xs text-gray-400">{s.name}</p>
+                      </td>
+                      <td className="px-6 py-4 text-gray-600 dark:text-gray-300">{s.email}</td>
+                      <td className="px-6 py-4">
+                        {s.verified
+                          ? <span className="text-green-600 font-semibold text-xs">Verified Seller ✅</span>
+                          : <span className="text-gray-400 text-xs">Not verified</span>}
+                      </td>
+                      <td className="px-6 py-4">
+                        <button
+                          onClick={() => handleVerifySeller(s.id, !s.verified)}
+                          className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors ${
+                            s.verified
+                              ? 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                              : 'bg-green-500 text-white hover:bg-green-600'
+                          }`}
+                        >
+                          {s.verified ? 'Remove' : 'Verify'}
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             )}
           </div>
         )}

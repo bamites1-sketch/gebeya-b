@@ -1,0 +1,179 @@
+const nodemailer = require('nodemailer');
+
+let transporter = null;
+
+function getTransporter() {
+  if (transporter) return transporter;
+  const { SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS } = process.env;
+  if (!SMTP_HOST || !SMTP_USER || !SMTP_PASS) return null;
+
+  transporter = nodemailer.createTransport({
+    host: SMTP_HOST,
+    port: parseInt(SMTP_PORT || '587', 10),
+    secure: SMTP_PORT === '465',
+    auth: { user: SMTP_USER, pass: SMTP_PASS },
+  });
+  return transporter;
+}
+
+function buildInvoiceHtml({ order, buyer }) {
+  const items = order.items
+    .map(
+      (item) =>
+        `<tr>
+          <td style="padding:8px;border-bottom:1px solid #eee">${item.product.name}</td>
+          <td style="padding:8px;border-bottom:1px solid #eee;text-align:center">${item.quantity}</td>
+          <td style="padding:8px;border-bottom:1px solid #eee;text-align:right">${item.price.toLocaleString()} ETB</td>
+          <td style="padding:8px;border-bottom:1px solid #eee;text-align:right">${(item.price * item.quantity).toLocaleString()} ETB</td>
+        </tr>`
+    )
+    .join('');
+
+  return `
+    <div style="font-family:sans-serif;max-width:600px;margin:0 auto;color:#2C1810">
+      <h2 style="color:#F19A0E">gebeya-B Invoice</h2>
+      <p>Hi ${buyer.name},</p>
+      <p>Thank you for your purchase! Here is your order invoice.</p>
+      <table style="width:100%;margin:16px 0;font-size:14px">
+        <tr><td><strong>Order #</strong></td><td>${order.id}</td></tr>
+        <tr><td><strong>Date</strong></td><td>${new Date(order.createdAt).toLocaleString()}</td></tr>
+        ${order.txRef ? `<tr><td><strong>Reference</strong></td><td>${order.txRef}</td></tr>` : ''}
+        <tr><td><strong>Status</strong></td><td>${order.status}</td></tr>
+      </table>
+      <table style="width:100%;border-collapse:collapse;font-size:14px">
+        <thead>
+          <tr style="background:#F5F0E8">
+            <th style="padding:8px;text-align:left">Item</th>
+            <th style="padding:8px">Qty</th>
+            <th style="padding:8px;text-align:right">Price</th>
+            <th style="padding:8px;text-align:right">Total</th>
+          </tr>
+        </thead>
+        <tbody>${items}</tbody>
+        <tfoot>
+          <tr>
+            <td colspan="3" style="padding:12px 8px;text-align:right;font-weight:bold">Grand Total</td>
+            <td style="padding:12px 8px;text-align:right;font-weight:bold;color:#F19A0E">${order.totalPrice.toLocaleString()} ETB</td>
+          </tr>
+        </tfoot>
+      </table>
+      <p style="margin-top:24px;font-size:13px;color:#666">Questions? Reply to this email or visit gebeya-B.</p>
+    </div>
+  `;
+}
+
+async function sendInvoiceEmail(order, buyer) {
+  const transport = getTransporter();
+  if (!transport || !buyer?.email) {
+    console.log('Invoice email skipped (SMTP not configured or no buyer email)');
+    return false;
+  }
+
+  const from = process.env.FROM_EMAIL || process.env.SMTP_USER;
+  await transport.sendMail({
+    from: `"gebeya-B" <${from}>`,
+    to: buyer.email,
+    subject: `Invoice for Order #${order.id} — gebeya-B`,
+    html: buildInvoiceHtml({ order, buyer }),
+  });
+  return true;
+}
+
+// Build HTML for the seller sale notification email
+function buildSellerSaleHtml({ order, seller, saleItems }) {
+  const rows = saleItems
+    .map(
+      (item) =>
+        `<tr>
+          <td style="padding:8px;border-bottom:1px solid #eee">${item.product.name}</td>
+          <td style="padding:8px;border-bottom:1px solid #eee;text-align:center">${item.quantity}</td>
+          <td style="padding:8px;border-bottom:1px solid #eee;text-align:right">${item.price.toLocaleString()} ETB</td>
+          <td style="padding:8px;border-bottom:1px solid #eee;text-align:right">${(item.price * item.quantity).toLocaleString()} ETB</td>
+        </tr>`
+    )
+    .join('');
+
+  const subtotal = saleItems.reduce((s, i) => s + i.price * i.quantity, 0);
+
+  return `
+    <div style="font-family:sans-serif;max-width:600px;margin:0 auto;color:#2C1810">
+      <h2 style="color:#078930">🎉 New Sale on gebeya-B</h2>
+      <p>Hi ${seller.name || seller.shopName},</p>
+      <p>Great news! You have a new sale from Order <strong>#${order.id}</strong>. Here are the details:</p>
+      <table style="width:100%;margin:16px 0;font-size:14px">
+        <tr><td><strong>Order #</strong></td><td>${order.id}</td></tr>
+        <tr><td><strong>Date</strong></td><td>${new Date(order.createdAt).toLocaleString()}</td></tr>
+        ${order.txRef ? `<tr><td><strong>Reference</strong></td><td>${order.txRef}</td></tr>` : ''}
+      </table>
+      <table style="width:100%;border-collapse:collapse;font-size:14px">
+        <thead>
+          <tr style="background:#F5F0E8">
+            <th style="padding:8px;text-align:left">Item</th>
+            <th style="padding:8px">Qty</th>
+            <th style="padding:8px;text-align:right">Price</th>
+            <th style="padding:8px;text-align:right">Subtotal</th>
+          </tr>
+        </thead>
+        <tbody>${rows}</tbody>
+        <tfoot>
+          <tr>
+            <td colspan="3" style="padding:12px 8px;text-align:right;font-weight:bold">Your Sale Total</td>
+            <td style="padding:12px 8px;text-align:right;font-weight:bold;color:#078930">${subtotal.toLocaleString()} ETB</td>
+          </tr>
+        </tfoot>
+      </table>
+      <p style="margin-top:24px;font-size:13px;color:#666">Log in to your seller dashboard to view and manage this order.</p>
+      <p style="font-size:13px;color:#666">Thank you for selling on gebeya-B 🇪🇹</p>
+    </div>
+  `;
+}
+
+/**
+ * Send sale notification emails to all sellers whose products were purchased.
+ * Groups order items by sellerId and sends one email per seller.
+ */
+async function sendSellerSaleEmails(order) {
+  const transport = getTransporter();
+  if (!transport) {
+    console.log('Seller sale emails skipped (SMTP not configured)');
+    return;
+  }
+
+  // Group items by seller
+  const bySeller = {};
+  for (const item of order.items) {
+    const sellerId = item.product?.sellerId;
+    if (!sellerId) continue; // seeded/admin products — no seller to notify
+    if (!bySeller[sellerId]) {
+      bySeller[sellerId] = { seller: null, items: [] };
+    }
+    bySeller[sellerId].items.push(item);
+  }
+
+  if (Object.keys(bySeller).length === 0) return;
+
+  // Fetch seller details
+  const prisma = require('../lib/prisma');
+  const sellerIds = Object.keys(bySeller).map(Number);
+  const sellers = await prisma.user.findMany({
+    where: { id: { in: sellerIds } },
+    select: { id: true, name: true, email: true, shopName: true },
+  });
+
+  const from = process.env.FROM_EMAIL || process.env.SMTP_USER;
+
+  await Promise.allSettled(
+    sellers.map((seller) => {
+      const group = bySeller[seller.id];
+      if (!seller.email) return Promise.resolve();
+      return transport.sendMail({
+        from: `"gebeya-B" <${from}>`,
+        to: seller.email,
+        subject: `🎉 New Sale — Order #${order.id} — gebeya-B`,
+        html: buildSellerSaleHtml({ order, seller, saleItems: group.items }),
+      });
+    })
+  );
+}
+
+module.exports = { sendInvoiceEmail, sendSellerSaleEmails };

@@ -7,6 +7,7 @@ import { useWishlist } from '../context/WishlistContext';
 import ProductGrid from '../components/product/ProductGrid';
 import { Skeleton } from '../components/ui/Skeleton';
 import Badge from '../components/ui/Badge';
+import VerifiedSellerBadge from '../components/ui/VerifiedSellerBadge';
 import { resolveImages } from '../utils/images';
 import ProductReviews from '../components/product/ProductReviews';
 
@@ -148,6 +149,15 @@ export default function ProductDetailPage() {
           <p className="text-gray-600 dark:text-gray-300 leading-relaxed border-t dark:border-gray-700 pt-4">
             {product.description}
           </p>
+
+          {/* Seller badge */}
+          {product.seller && (
+            <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
+              <span>🛍️</span>
+              <span>Sold by <span className="font-semibold text-gray-900 dark:text-white">{product.seller.shopName || product.seller.name}</span></span>
+              {product.seller.verified && <VerifiedSellerBadge />}
+            </div>
+          )}
 
           {/* Quantity */}
           <div className="flex items-center gap-4">

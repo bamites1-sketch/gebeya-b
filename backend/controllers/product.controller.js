@@ -20,7 +20,13 @@ const getProducts = async (req, res, next) => {
 
     const skip = (parseInt(page) - 1) * parseInt(limit);
     const [products, total] = await Promise.all([
-      prisma.product.findMany({ where, orderBy, skip, take: parseInt(limit) }),
+      prisma.product.findMany({
+        where,
+        orderBy,
+        skip,
+        take: parseInt(limit),
+        include: { seller: { select: { id: true, name: true, shopName: true, verified: true } } },
+      }),
       prisma.product.count({ where }),
     ]);
 
@@ -32,10 +38,10 @@ const getProducts = async (req, res, next) => {
 
 const getProduct = async (req, res, next) => {
   try {
-    // Increment views atomically and return updated product
     const product = await prisma.product.update({
       where: { id: parseInt(req.params.id) },
       data: { views: { increment: 1 } },
+      include: { seller: { select: { id: true, name: true, shopName: true, verified: true } } },
     });
     if (!product) return res.status(404).json({ message: 'Product not found' });
     res.json(product);

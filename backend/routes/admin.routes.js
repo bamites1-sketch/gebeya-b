@@ -11,9 +11,24 @@ router.put('/orders/:id/status', updateOrderStatus);
 router.get('/users', async (req, res, next) => {
   try {
     const users = await prisma.user.findMany({
-      select: { id: true, name: true, email: true, role: true, createdAt: true },
+      select: { id: true, name: true, email: true, role: true, verified: true, shopName: true, createdAt: true },
     });
     res.json(users);
+  } catch (error) {
+    next(error);
+  }
+});
+
+// Verify / unverify a seller
+router.put('/users/:id/verify', async (req, res, next) => {
+  try {
+    const { verified } = req.body;
+    const user = await prisma.user.update({
+      where: { id: parseInt(req.params.id) },
+      data: { verified: Boolean(verified) },
+      select: { id: true, name: true, email: true, role: true, verified: true },
+    });
+    res.json(user);
   } catch (error) {
     next(error);
   }

@@ -49,7 +49,7 @@ const getMe = async (req, res, next) => {
   try {
     const user = await prisma.user.findUnique({
       where: { id: req.user.id },
-      select: { id: true, name: true, email: true, role: true, createdAt: true },
+      select: { id: true, name: true, email: true, role: true, shopName: true, bio: true, verified: true, createdAt: true },
     });
     res.json(user);
   } catch (error) {
@@ -67,7 +67,7 @@ const updateProfile = async (req, res, next) => {
     const user = await prisma.user.update({
       where: { id: req.user.id },
       data,
-      select: { id: true, name: true, email: true, role: true },
+      select: { id: true, name: true, email: true, role: true, shopName: true, bio: true, verified: true },
     });
     res.json(user);
   } catch (error) {

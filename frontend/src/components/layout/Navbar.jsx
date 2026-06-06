@@ -8,6 +8,7 @@ import { useWishlist } from '../../context/WishlistContext';
 import { getFirstImage } from '../../utils/images';
 import api from '../../services/api';
 import NotificationBell from '../ui/NotificationBell';
+import VerifiedSellerBadge from '../ui/VerifiedSellerBadge';
 
 const LANGUAGES = [
   { code: 'en', label: 'EN',  name: 'English',  flag: '🇬🇧' },
@@ -94,7 +95,10 @@ function SearchPanel({ onClose }) {
                     onError={(e) => { e.currentTarget.src = `https://placehold.co/40x40/2C1810/F19A0E?text=${p.name[0]}`; e.currentTarget.onerror = null; }} />
                   <div className="flex-1 min-w-0">
                     <p className="font-semibold text-[#2C1810] dark:text-white truncate text-sm">{p.name}</p>
-                    <p className="text-xs text-gray-400 capitalize">{p.category}</p>
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <p className="text-xs text-gray-400 capitalize">{p.category}</p>
+                      {p.seller?.verified && <VerifiedSellerBadge className="scale-90 origin-left" />}
+                    </div>
                   </div>
                   <p className="text-sm font-bold text-[#F19A0E] shrink-0">{p.price.toLocaleString()} ETB</p>
                 </button>

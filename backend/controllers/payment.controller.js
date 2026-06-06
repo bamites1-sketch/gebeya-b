@@ -1,6 +1,6 @@
 const prisma = require('../lib/prisma');
 const https = require('https');
-const { createNotification } = require('./notification.controller');
+const { sendInvoiceEmail, sendSellerSaleEmails } = require('../services/email.service');
 
 const CHAPA_SECRET = process.env.CHAPA_SECRET_KEY;
 const FRONTEND_URL = process.env.FRONTEND_URL || 'https://gebeya-b.vercel.app';
@@ -60,22 +60,38 @@ const initializePayment = async (req, res, next) => {
     });
     const txRef = `GEB-${order.id}-${Date.now()}`;
     await prisma.order.update({ where: { id: order.id }, data: { txRef } });
+    const nameParts = req.user.name.trim().split(/\s+/);
+    const firstName = nameParts[0].substring(0, 50);
+    const lastName = (nameParts.length > 1 ? nameParts.slice(1).join(' ') : nameParts[0]).substring(0, 50);
+
+    // Chapa validates email strictly — normalize to a safe format
+    // Use the user's actual email but ensure it's a clean address
+    const email = req.user.email.trim().toLowerCase();
+
     const chapaPayload = {
       amount: String(Math.round(totalPrice)),
       currency: 'ETB',
-      email: req.user.email,
-      first_name: (req.user.name.split(' ')[0] || 'User').substring(0, 50),
-      last_name: (req.user.name.split(' ').slice(1).join(' ') || 'Customer').substring(0, 50),
+      email,
+      first_name: firstName,
+      last_name: lastName,
       tx_ref: txRef,
       callback_url: `${BACKEND_URL}/api/payments/callback/${txRef}`,
       return_url: `${FRONTEND_URL}/payment-success?tx_ref=${txRef}`,
       title: 'gebeya-B Order',
       description: `Order ${order.id}`,
+      customization: {
+        title: 'gebeya-B',
+        description: `Order #${order.id}`,
+      },
     };
     const chapaRes = await chapaRequest('POST', '/v1/transaction/initialize', chapaPayload);
-    console.log('Chapa response:', JSON.stringify(chapaRes));
+    console.log('Chapa init response:', JSON.stringify(chapaRes));
     if (chapaRes.status !== 'success') {
-      return res.status(400).json({ message: chapaRes.message || JSON.stringify(chapaRes) });
+      // Surface Chapa's actual error message to the frontend
+      const errorMsg = typeof chapaRes.message === 'object'
+        ? Object.entries(chapaRes.message).map(([k, v]) => `${k}: ${v}`).join(', ')
+        : chapaRes.message || 'Payment initialization failed';
+      return res.status(400).json({ message: errorMsg });
     }
     res.json({ checkout_url: chapaRes.data.checkout_url, tx_ref: txRef, order_id: order.id });
   } catch (error) {
@@ -123,6 +139,17 @@ const verifyPayment = async (req, res, next) => {
       );
       const cart = await prisma.cart.findUnique({ where: { userId: order.userId } });
       if (cart) await prisma.cartItem.deleteMany({ where: { cartId: cart.id } });
+
+      const buyer = await prisma.user.findUnique({
+        where: { id: order.userId },
+        select: { name: true, email: true },
+      });
+      sendInvoiceEmail(updated, buyer).catch((err) =>
+        console.error('Invoice email failed:', err.message)
+      );
+      sendSellerSaleEmails(updated).catch((err) =>
+        console.error('Seller sale email failed:', err.message)
+      );
     }
 
     res.json({ message: isPaid ? 'Payment verified' : 'Order created', order: updated });

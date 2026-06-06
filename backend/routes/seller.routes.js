@@ -9,6 +9,7 @@ const {
   updateSellerProduct,
   deleteSellerProduct,
   getSellerStats,
+  generateAiDescription,
 } = require('../controllers/seller.controller');
 
 // Seller protection middleware
@@ -20,6 +21,7 @@ const sellerOnly = (req, res, next) => {
 };
 
 router.post('/apply', protect, applyToSell);
+router.post('/ai-description', protect, sellerOnly, generateAiDescription);
 router.put('/profile', protect, sellerOnly, updateSellerProfile);
 router.get('/products', protect, sellerOnly, getMyProducts);
 router.get('/stats', protect, sellerOnly, getSellerStats);
