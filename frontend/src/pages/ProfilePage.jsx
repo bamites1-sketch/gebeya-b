@@ -23,6 +23,22 @@ export default function ProfilePage() {
   const [orders, setOrders] = useState([]);
   const [ordersLoading, setOrdersLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('profile');
+  const [becomingSeller, setBecomingSeller] = useState(false);
+
+  const handleBecomeSeller = async () => {
+    const shopName = prompt('Enter your shop name:');
+    if (!shopName?.trim()) return;
+    setBecomingSeller(true);
+    try {
+      const { data } = await api.post('/seller/apply', { shopName: shopName.trim() });
+      updateUser(data.user);
+      toast.success('🎉 Seller account activated! You can now add products.');
+    } catch (err) {
+      toast.error(err.response?.data?.message || 'Failed to activate seller account');
+    } finally {
+      setBecomingSeller(false);
+    }
+  };
 
   useEffect(() => {
     api.get('/orders/my')
@@ -105,6 +121,43 @@ export default function ProfilePage() {
               </Button>
             </form>
           </div>
+
+          {/* Become a Seller */}
+          {user.role === 'USER' && (
+            <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm mt-4 border-2 border-dashed border-[#F19A0E]/30">
+              <div className="flex items-start gap-4">
+                <span className="text-3xl">🛍️</span>
+                <div className="flex-1">
+                  <h3 className="font-bold text-gray-900 dark:text-white mb-1">Start Selling on gebeya-B</h3>
+                  <p className="text-sm text-gray-500 dark:text-gray-400 mb-3">
+                    List your Ethiopian cultural products and reach customers worldwide. Free to join.
+                  </p>
+                  <button
+                    onClick={handleBecomeSeller}
+                    disabled={becomingSeller}
+                    className="px-5 py-2.5 bg-[#078930] hover:bg-[#056b25] text-white rounded-xl font-bold text-sm transition-colors disabled:opacity-60 flex items-center gap-2"
+                  >
+                    {becomingSeller && <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />}
+                    {becomingSeller ? 'Activating...' : '🇪🇹 Become a Seller'}
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Seller dashboard link — shown once they're a seller */}
+          {(user.role === 'SELLER' || user.role === 'ADMIN') && (
+            <div className="bg-[#F5F0E8] dark:bg-[#2C1810]/30 rounded-2xl p-5 shadow-sm mt-4 flex items-center justify-between">
+              <div>
+                <p className="font-bold text-[#2C1810] dark:text-white">🛍️ {user.shopName || 'Seller Account'}</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">Manage your products and track sales</p>
+              </div>
+              <Link to="/seller"
+                className="px-5 py-2.5 bg-[#F19A0E] hover:bg-[#d97b08] text-white rounded-xl font-bold text-sm transition-colors">
+                Open Dashboard →
+              </Link>
+            </div>
+          )}
         </div>
       )}
 
