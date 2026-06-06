@@ -305,6 +305,7 @@ export default function Navbar() {
                           { to: '/profile',  icon: '👤', label: 'My Profile' },
                           { to: '/wishlist', icon: '❤️', label: 'Wishlist' },
                           { to: '/profile',  icon: '📦', label: 'My Orders' },
+                          { to: '/seller',   icon: '🛍️', label: user.role === 'SELLER' ? 'Seller Dashboard' : 'Become a Seller' },
                           ...(isAdmin ? [{ to: '/admin', icon: '⚙️', label: 'Admin Panel' }] : []),
                         ].map(({ to, icon, label }) => (
                           <Link key={label} to={to} onClick={() => setUserOpen(false)}

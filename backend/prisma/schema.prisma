@@ -13,10 +13,13 @@ model User {
   email     String    @unique
   password  String
   role      Role      @default(USER)
+  bio       String?
+  shopName  String?
   cart      Cart?
   wishlist  Wishlist?
   orders    Order[]
   reviews   Review[]
+  products  Product[] // products this seller owns
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
 }
@@ -24,6 +27,7 @@ model User {
 enum Role {
   USER
   ADMIN
+  SELLER
 }
 
 model Product {
@@ -35,6 +39,8 @@ model Product {
   category    String
   region      String?
   stock       Int              @default(0)
+  sellerId    Int?             // optional — null means seeded/admin product
+  seller      User?            @relation(fields: [sellerId], references: [id], onDelete: SetNull)
   cartItems   CartItem[]
   wishlistItems WishlistItem[]
   orderItems  OrderItem[]

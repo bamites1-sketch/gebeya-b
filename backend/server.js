@@ -27,13 +27,8 @@ app.use('/api/wishlist', require('./routes/wishlist.routes'));
 app.use('/api/orders', require('./routes/order.routes'));
 app.use('/api/payments', require('./routes/payment.routes'));
 
-// Reviews — wrapped to prevent startup crash if DB table missing
-try {
-  app.use('/api/reviews', require('./routes/review.routes'));
-} catch (e) {
-  console.error('Reviews route failed to load:', e.message);
-}
-
+app.use('/api/reviews', require('./routes/review.routes'));
+app.use('/api/seller', require('./routes/seller.routes'));
 app.use('/api/admin', require('./routes/admin.routes'));
 
 // Root route
