@@ -3,6 +3,7 @@ import { AuthProvider } from './context/AuthContext';
 import { CartProvider } from './context/CartContext';
 import { WishlistProvider } from './context/WishlistContext';
 import { ThemeProvider } from './context/ThemeContext';
+import { NotificationProvider } from './context/NotificationContext';
 import Layout from './components/layout/Layout';
 import HomePage from './pages/HomePage';
 import ProductsPage from './pages/ProductsPage';
@@ -24,6 +25,7 @@ export default function App() {
       <AuthProvider>
         <CartProvider>
           <WishlistProvider>
+            <NotificationProvider>
             <Layout>
               <Routes>
                 <Route path="/" element={<HomePage />} />
@@ -41,6 +43,7 @@ export default function App() {
                 <Route path="/seller" element={<SellerDashboardPage />} />
               </Routes>
             </Layout>
+            </NotificationProvider>
           </WishlistProvider>
         </CartProvider>
       </AuthProvider>

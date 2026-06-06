@@ -20,6 +20,7 @@ model User {
   orders    Order[]
   reviews   Review[]
   products  Product[] // products this seller owns
+  notifications Notification[]
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
 }
@@ -128,4 +129,16 @@ model Review {
   createdAt DateTime @default(now())
 
   @@unique([userId, productId])
+}
+
+model Notification {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  title     String
+  message   String
+  type      String   @default("INFO")
+  link      String?
+  read      Boolean  @default(false)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
 }

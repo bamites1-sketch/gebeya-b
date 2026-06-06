@@ -7,6 +7,7 @@ import { useCart } from '../../context/CartContext';
 import { useWishlist } from '../../context/WishlistContext';
 import { getFirstImage } from '../../utils/images';
 import api from '../../services/api';
+import NotificationBell from '../ui/NotificationBell';
 
 const LANGUAGES = [
   { code: 'en', label: 'EN',  name: 'English',  flag: '🇬🇧' },
@@ -241,6 +242,9 @@ export default function Navbar() {
                 <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
               </svg>
             </button>
+
+            {/* Notification Bell */}
+            <NotificationBell />
 
             {/* Language switcher */}
             <div className="relative hidden sm:block" ref={langRef}>

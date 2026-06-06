@@ -1,5 +1,6 @@
 const prisma = require('../lib/prisma');
 const https = require('https');
+const { createNotification } = require('./notification.controller');
 
 const CHAPA_SECRET = process.env.CHAPA_SECRET_KEY;
 const FRONTEND_URL = process.env.FRONTEND_URL || 'https://gebeya-b.vercel.app';

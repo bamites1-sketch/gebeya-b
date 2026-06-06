@@ -1,4 +1,5 @@
 const prisma = require('../lib/prisma');
+const { createNotification } = require('./notification.controller');
 
 const createOrder = async (req, res, next) => {
   try {
@@ -28,7 +29,7 @@ const createOrder = async (req, res, next) => {
       include: { items: { include: { product: true } } },
     });
 
-    // Decrement stock for each ordered product
+    // Decrement stock
     await Promise.all(
       cart.items.map((item) =>
         prisma.product.update({
@@ -38,8 +39,41 @@ const createOrder = async (req, res, next) => {
       )
     );
 
-    // Clear cart after order
+    // Clear cart
     await prisma.cartItem.deleteMany({ where: { cartId: cart.id } });
+
+    // Notify buyer
+    await createNotification({
+      userId: req.user.id,
+      title: 'Order Placed Successfully',
+      message: `Your order #${order.id} for ${totalPrice.toLocaleString()} ETB has been placed.`,
+      type: 'ORDER',
+      link: '/profile',
+    });
+
+    // Notify sellers of their products being ordered
+    const sellerIds = [...new Set(cart.items.map(i => i.product.sellerId).filter(Boolean))];
+    await Promise.all(sellerIds.map(sellerId =>
+      createNotification({
+        userId: sellerId,
+        title: 'New Order Received',
+        message: `You have a new order #${order.id}! Check your seller dashboard.`,
+        type: 'SELLER',
+        link: '/seller',
+      })
+    ));
+
+    // Notify admins
+    const admins = await prisma.user.findMany({ where: { role: 'ADMIN' }, select: { id: true } });
+    await Promise.all(admins.map(admin =>
+      createNotification({
+        userId: admin.id,
+        title: 'New Order',
+        message: `Order #${order.id} placed for ${totalPrice.toLocaleString()} ETB.`,
+        type: 'ADMIN',
+        link: '/admin',
+      })
+    ));
 
     res.status(201).json(order);
   } catch (error) {

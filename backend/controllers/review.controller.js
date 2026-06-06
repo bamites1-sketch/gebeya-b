@@ -1,4 +1,5 @@
 const prisma = require('../lib/prisma');
+const { createNotification } = require('./notification.controller');
 
 const getReviews = async (req, res, next) => {
   try {
@@ -42,6 +43,19 @@ const createReview = async (req, res, next) => {
       data: { rating: parseInt(rating), comment: comment.trim(), userId: req.user.id, productId },
       include: { user: { select: { id: true, name: true } } },
     });
+
+    // Notify the seller if product has a seller
+    const product = await prisma.product.findUnique({ where: { id: productId }, select: { name: true, sellerId: true } });
+    if (product?.sellerId) {
+      await createNotification({
+        userId: product.sellerId,
+        title: 'New Review',
+        message: `${req.user.name} left a ${rating}⭐ review on "${product.name}".`,
+        type: 'REVIEW',
+        link: `/products/${productId}`,
+      });
+    }
+
     res.status(201).json(review);
   } catch (error) {
     next(error);
