@@ -18,7 +18,15 @@ function ProductModal({ product, onClose, onSaved }) {
     region: product?.region || 'addis_ababa',
     stock: product?.stock ?? '',
   });
+  const [images, setImages] = useState([]);
+  const [previews, setPreviews] = useState([]);
   const [saving, setSaving] = useState(false);
+
+  const handleImages = (e) => {
+    const files = Array.from(e.target.files).slice(0, 5);
+    setImages(files);
+    setPreviews(files.map((f) => URL.createObjectURL(f)));
+  };
 
   const handleSave = async (e) => {
     e.preventDefault();
@@ -26,6 +34,7 @@ function ProductModal({ product, onClose, onSaved }) {
     try {
       const fd = new FormData();
       Object.entries(form).forEach(([k, v]) => fd.append(k, v));
+      images.forEach((f) => fd.append('images', f));
       if (product) {
         await api.put(`/seller/products/${product.id}`, fd, { headers: { 'Content-Type': 'multipart/form-data' } });
         toast.success('Product updated');
@@ -86,6 +95,28 @@ function ProductModal({ product, onClose, onSaved }) {
               </select>
             </div>
           </div>
+
+          {/* Product Images */}
+          <div>
+            <label className="text-sm font-semibold text-gray-700 dark:text-gray-300 block mb-1">
+              Product Photos <span className="text-xs font-normal text-gray-400">(up to 5)</span>
+            </label>
+            <label className="flex flex-col items-center justify-center w-full h-28 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl cursor-pointer hover:border-[#F19A0E] transition-colors bg-gray-50 dark:bg-gray-700/50">
+              <span className="text-2xl mb-1">📷</span>
+              <span className="text-sm text-gray-500 dark:text-gray-400 font-medium">Click to upload photos</span>
+              <span className="text-xs text-gray-400 mt-0.5">JPG, PNG, WEBP</span>
+              <input type="file" multiple accept="image/*" onChange={handleImages} className="hidden" />
+            </label>
+            {previews.length > 0 && (
+              <div className="flex gap-2 mt-2 flex-wrap">
+                {previews.map((src, i) => (
+                  <img key={i} src={src} alt=""
+                    className="w-16 h-16 object-cover rounded-xl border-2 border-[#F19A0E]/30" />
+                ))}
+              </div>
+            )}
+          </div>
+
           <div className="flex gap-3 pt-2">
             <button type="submit" disabled={saving}
               className="flex-1 py-3 bg-[#F19A0E] hover:bg-[#d97b08] text-white rounded-xl font-bold transition-colors disabled:opacity-60 flex items-center justify-center gap-2">
