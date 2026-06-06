@@ -127,12 +127,22 @@ export default function ProductDetailPage() {
             <span className="text-lg text-gray-500 dark:text-gray-400">{t('common.etb')}</span>
           </div>
 
-          {/* Stock indicator */}
-          <div className="flex items-center gap-2">
-            <span className={`w-2.5 h-2.5 rounded-full ${product.stock > 10 ? 'bg-green-500' : product.stock > 0 ? 'bg-yellow-500' : 'bg-red-500'}`} />
-            <span className="text-sm text-gray-600 dark:text-gray-400">
-              {product.stock > 10 ? t('product.in_stock') : product.stock > 0 ? `Only ${product.stock} left` : t('product.out_of_stock')}
-            </span>
+          {/* Stock + views indicator */}
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2">
+              <span className={`w-2.5 h-2.5 rounded-full ${product.stock > 10 ? 'bg-green-500' : product.stock > 0 ? 'bg-yellow-500' : 'bg-red-500'}`} />
+              <span className="text-sm text-gray-600 dark:text-gray-400">
+                {product.stock > 10 ? t('product.in_stock') : product.stock > 0 ? `Only ${product.stock} left` : t('product.out_of_stock')}
+              </span>
+            </div>
+            {product.views > 0 && (
+              <span className="flex items-center gap-1.5 text-sm text-gray-400">
+                <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+                </svg>
+                {product.views.toLocaleString()} views
+              </span>
+            )}
           </div>
 
           <p className="text-gray-600 dark:text-gray-300 leading-relaxed border-t dark:border-gray-700 pt-4">

@@ -32,7 +32,11 @@ const getProducts = async (req, res, next) => {
 
 const getProduct = async (req, res, next) => {
   try {
-    const product = await prisma.product.findUnique({ where: { id: parseInt(req.params.id) } });
+    // Increment views atomically and return updated product
+    const product = await prisma.product.update({
+      where: { id: parseInt(req.params.id) },
+      data: { views: { increment: 1 } },
+    });
     if (!product) return res.status(404).json({ message: 'Product not found' });
     res.json(product);
   } catch (error) {
