@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import api from '../services/api';
@@ -13,6 +13,10 @@ export default function ProductsPage() {
   const [pages, setPages] = useState(1);
   const [loading, setLoading] = useState(true);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [wakingUp, setWakingUp] = useState(false);
+  const [countdown, setCountdown] = useState(0);
+  const retryTimer = useRef(null);
+  const countdownTimer = useRef(null);
 
   const [filters, setFilters] = useState({
     search:   searchParams.get('search')   || '',
@@ -26,26 +30,63 @@ export default function ProductsPage() {
 
   const [error, setError] = useState(false);
 
-  const load = useCallback(async () => {
-    setLoading(true);
-    setError(false);
+  const load = useCallback(async (isRetry = false) => {
+    if (!isRetry) {
+      setLoading(true);
+      setError(false);
+      setWakingUp(false);
+    }
     const params = {};
     Object.entries(filters).forEach(([k, v]) => { if (v) params[k] = v; });
     setSearchParams(params);
     try {
-      const { data } = await api.get('/products', { params });
+      const { data } = await api.get('/products', { params, timeout: 35000 });
       setProducts(data.products || []);
       setTotal(data.total || 0);
       setPages(data.pages || 1);
+      setError(false);
+      setWakingUp(false);
+      clearTimeout(retryTimer.current);
+      clearInterval(countdownTimer.current);
     } catch {
-      setError(true);
-      setProducts([]);
+      if (!isRetry) {
+        // Server is cold-starting — auto retry after 30s countdown
+        setError(true);
+        setWakingUp(true);
+        setCountdown(30);
+        countdownTimer.current = setInterval(() => {
+          setCountdown(prev => {
+            if (prev <= 1) { clearInterval(countdownTimer.current); return 0; }
+            return prev - 1;
+          });
+        }, 1000);
+        retryTimer.current = setTimeout(() => load(true), 30000);
+      } else {
+        setError(true);
+        setWakingUp(false);
+      }
     } finally {
       setLoading(false);
     }
   }, [filters]);
 
-  useEffect(() => { load(); }, [load]);
+  useEffect(() => {
+    load();
+    return () => {
+      clearTimeout(retryTimer.current);
+      clearInterval(countdownTimer.current);
+    };
+  }, [load]);
+
+  const handleManualRetry = () => {
+    clearTimeout(retryTimer.current);
+    clearInterval(countdownTimer.current);
+    setWakingUp(false);
+    setError(false);
+    setLoading(true);
+    setCountdown(0);
+    load(false);
+  };
 
   const activeFilterCount = [filters.category, filters.region, filters.minPrice, filters.maxPrice, filters.search].filter(Boolean).length;
 
@@ -96,16 +137,35 @@ export default function ProductsPage() {
 
           <ProductGrid products={products} loading={loading} />
 
-          {/* Error / empty state */}
+          {/* Error / waking up state */}
           {!loading && error && (
             <div className="text-center py-16 bg-white rounded-2xl shadow-sm">
-              <p className="text-4xl mb-3">⏳</p>
-              <p className="font-bold text-gray-700 mb-1">Backend is waking up...</p>
-              <p className="text-sm text-gray-400 mb-4">The server may take ~30 seconds to start. Please wait.</p>
-              <button onClick={load}
-                className="px-6 py-2.5 bg-[#F19A0E] text-white rounded-xl font-bold text-sm hover:bg-[#d97b08] transition-colors">
-                Try Again
-              </button>
+              {wakingUp ? (
+                <>
+                  <div className="w-16 h-16 mx-auto mb-4 relative">
+                    <div className="absolute inset-0 rounded-full border-4 border-[#F19A0E]/20" />
+                    <div className="absolute inset-0 rounded-full border-4 border-t-[#F19A0E] animate-spin" />
+                    <span className="absolute inset-0 flex items-center justify-center text-xl">⏳</span>
+                  </div>
+                  <p className="font-bold text-gray-700 mb-1">Server is waking up...</p>
+                  <p className="text-sm text-gray-400 mb-2">Render's free tier sleeps when idle. Auto-retrying in</p>
+                  <p className="text-3xl font-black text-[#F19A0E] mb-4">{countdown}s</p>
+                  <button onClick={handleManualRetry}
+                    className="px-6 py-2.5 bg-[#F19A0E] text-white rounded-xl font-bold text-sm hover:bg-[#d97b08] transition-colors">
+                    Retry Now
+                  </button>
+                </>
+              ) : (
+                <>
+                  <p className="text-4xl mb-3">⚠️</p>
+                  <p className="font-bold text-gray-700 mb-1">Could not load products</p>
+                  <p className="text-sm text-gray-400 mb-4">The server may be unavailable. Please try again.</p>
+                  <button onClick={handleManualRetry}
+                    className="px-6 py-2.5 bg-[#F19A0E] text-white rounded-xl font-bold text-sm hover:bg-[#d97b08] transition-colors">
+                    Try Again
+                  </button>
+                </>
+              )}
             </div>
           )}
 

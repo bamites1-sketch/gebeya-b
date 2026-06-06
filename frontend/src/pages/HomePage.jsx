@@ -102,13 +102,27 @@ export default function HomePage() {
   const { t } = useTranslation();
   const [featured, setFeatured] = useState([]);
   const [loading,  setLoading]  = useState(true);
+  const [wakingUp, setWakingUp] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
-    api.get('/products?limit=6')
-      .then(({ data }) => setFeatured(data.products || []))
-      .catch(() => {})
-      .finally(() => setLoading(false));
+    let retryTimer;
+    const fetchProducts = (isRetry = false) => {
+      api.get('/products?limit=6', { timeout: 35000 })
+        .then(({ data }) => {
+          setFeatured(data.products || []);
+          setWakingUp(false);
+        })
+        .catch(() => {
+          if (!isRetry) {
+            setWakingUp(true);
+            retryTimer = setTimeout(() => fetchProducts(true), 30000);
+          }
+        })
+        .finally(() => setLoading(false));
+    };
+    fetchProducts();
+    return () => clearTimeout(retryTimer);
   }, []);
 
   return (
@@ -322,6 +336,14 @@ export default function HomePage() {
                   </div>
                 </div>
               ))}
+            </div>
+          ) : wakingUp ? (
+            <div className="col-span-full text-center py-12 bg-white rounded-2xl">
+              <div className="w-12 h-12 mx-auto mb-3 relative">
+                <div className="absolute inset-0 rounded-full border-4 border-[#F19A0E]/20" />
+                <div className="absolute inset-0 rounded-full border-4 border-t-[#F19A0E] animate-spin" />
+              </div>
+              <p className="font-bold text-gray-600 text-sm">Server warming up — products loading shortly...</p>
             </div>
           ) : (
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
