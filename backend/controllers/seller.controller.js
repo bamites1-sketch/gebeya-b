@@ -60,7 +60,11 @@ const createSellerProduct = async (req, res, next) => {
     if (!name || !description || !price || !category) {
       return res.status(400).json({ message: 'name, description, price and category are required' });
     }
-    const images = req.files ? req.files.map((f) => `/uploads/${f.filename}`) : [];
+    const images = req.files && req.files.length > 0
+      ? req.files.map((f) => `/uploads/${f.filename}`)
+      : req.body.imageUrls
+        ? JSON.parse(req.body.imageUrls)
+        : [];
     const product = await prisma.product.create({
       data: {
         name,

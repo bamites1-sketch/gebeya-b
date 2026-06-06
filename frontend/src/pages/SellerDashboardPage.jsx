@@ -17,6 +17,7 @@ function ProductModal({ product, onClose, onSaved }) {
     category: product?.category || 'clothing',
     region: product?.region || 'addis_ababa',
     stock: product?.stock ?? '',
+    imageUrl: '',
   });
   const [images, setImages] = useState([]);
   const [previews, setPreviews] = useState([]);
@@ -33,8 +34,18 @@ function ProductModal({ product, onClose, onSaved }) {
     setSaving(true);
     try {
       const fd = new FormData();
-      Object.entries(form).forEach(([k, v]) => fd.append(k, v));
-      images.forEach((f) => fd.append('images', f));
+      // Append all form fields except imageUrl
+      const { imageUrl, ...formData } = form;
+      Object.entries(formData).forEach(([k, v]) => fd.append(k, v));
+
+      if (images.length > 0) {
+        // File uploads take priority
+        images.forEach((f) => fd.append('images', f));
+      } else if (imageUrl?.trim()) {
+        // URL fallback — send as imageUrls JSON
+        fd.append('imageUrls', JSON.stringify([imageUrl.trim()]));
+      }
+
       if (product) {
         await api.put(`/seller/products/${product.id}`, fd, { headers: { 'Content-Type': 'multipart/form-data' } });
         toast.success('Product updated');
@@ -98,17 +109,35 @@ function ProductModal({ product, onClose, onSaved }) {
 
           {/* Product Images */}
           <div>
-            <label className="text-sm font-semibold text-gray-700 dark:text-gray-300 block mb-1">
-              Product Photos <span className="text-xs font-normal text-gray-400">(up to 5)</span>
+            <label className="text-sm font-semibold text-gray-700 dark:text-gray-300 block mb-2">
+              Product Image <span className="text-xs font-normal text-gray-400">(paste a URL or upload)</span>
             </label>
-            <label className="flex flex-col items-center justify-center w-full h-28 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl cursor-pointer hover:border-[#F19A0E] transition-colors bg-gray-50 dark:bg-gray-700/50">
+
+            {/* URL input */}
+            <input
+              type="url"
+              value={form.imageUrl || ''}
+              onChange={(e) => setForm({ ...form, imageUrl: e.target.value })}
+              placeholder="https://example.com/image.jpg"
+              className="w-full px-3 py-2.5 border dark:border-gray-600 rounded-xl text-sm dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#F19A0E] mb-2"
+            />
+
+            <p className="text-xs text-gray-400 mb-2 text-center">— or upload a file —</p>
+
+            <label className="flex flex-col items-center justify-center w-full h-24 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl cursor-pointer hover:border-[#F19A0E] transition-colors bg-gray-50 dark:bg-gray-700/50">
               <span className="text-2xl mb-1">📷</span>
-              <span className="text-sm text-gray-500 dark:text-gray-400 font-medium">Click to upload photos</span>
-              <span className="text-xs text-gray-400 mt-0.5">JPG, PNG, WEBP</span>
+              <span className="text-sm text-gray-500 dark:text-gray-400 font-medium">Click to upload</span>
               <input type="file" multiple accept="image/*" onChange={handleImages} className="hidden" />
             </label>
-            {previews.length > 0 && (
+
+            {/* Previews */}
+            {(previews.length > 0 || form.imageUrl) && (
               <div className="flex gap-2 mt-2 flex-wrap">
+                {form.imageUrl && (
+                  <img src={form.imageUrl} alt="preview"
+                    className="w-16 h-16 object-cover rounded-xl border-2 border-[#F19A0E]/30"
+                    onError={(e) => { e.currentTarget.style.display = 'none'; }} />
+                )}
                 {previews.map((src, i) => (
                   <img key={i} src={src} alt=""
                     className="w-16 h-16 object-cover rounded-xl border-2 border-[#F19A0E]/30" />
