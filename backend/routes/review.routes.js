@@ -1,9 +1,9 @@
-const router = require('express').Router({ mergeParams: true });
+const router = require('express').Router();
 const { getReviews, createReview, deleteReview } = require('../controllers/review.controller');
 const { protect } = require('../middleware/auth.middleware');
 
-router.get('/', getReviews);
-router.post('/', protect, createReview);
-router.delete('/:reviewId', protect, deleteReview);
+router.get('/:productId', getReviews);
+router.post('/:productId', protect, createReview);
+router.delete('/:productId/:reviewId', protect, deleteReview);
 
 module.exports = router;
