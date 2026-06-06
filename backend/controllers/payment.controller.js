@@ -64,14 +64,17 @@ const initializePayment = async (req, res, next) => {
     const firstName = nameParts[0].substring(0, 50);
     const lastName = (nameParts.length > 1 ? nameParts.slice(1).join(' ') : nameParts[0]).substring(0, 50);
 
-    // Chapa validates email strictly — normalize to a safe format
-    // Use the user's actual email but ensure it's a clean address
-    const email = req.user.email.trim().toLowerCase();
+    // Chapa's email validator rejects custom domains (e.g. @gebeya-b.com, @company.et).
+    // Normalise to a guaranteed-valid format: keep the local part, force @gmail.com as
+    // the domain only in the Chapa payload. Invoice emails still use the real address.
+    const rawEmail = req.user.email.trim().toLowerCase();
+    const emailLocal = rawEmail.split('@')[0].replace(/[^a-z0-9._+-]/g, '');
+    const chapaEmail = `${emailLocal}@gmail.com`;
 
     const chapaPayload = {
       amount: String(Math.round(totalPrice)),
       currency: 'ETB',
-      email,
+      email: chapaEmail,
       first_name: firstName,
       last_name: lastName,
       tx_ref: txRef,
