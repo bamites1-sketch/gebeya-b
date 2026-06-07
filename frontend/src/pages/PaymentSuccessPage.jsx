@@ -12,7 +12,6 @@ export default function PaymentSuccessPage() {
   const [verifying, setVerifying] = useState(false); // silent background re-verify
   const { fetchCart } = useCart();
   const txRef = searchParams.get('tx_ref');
-  const retryCount = useRef(0);
   const retryTimer = useRef(null);
 
   // Attempt to verify. On any failure or PENDING status, retry up to 4 times

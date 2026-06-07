@@ -18,6 +18,20 @@ import CheckoutPage from './pages/CheckoutPage';
 import AboutPage from './pages/AboutPage';
 import PaymentSuccessPage from './pages/PaymentSuccessPage';
 import SellerDashboardPage from './pages/SellerDashboardPage';
+import { Link } from 'react-router-dom';
+
+function NotFoundPage() {
+  return (
+    <div className="min-h-[60vh] flex flex-col items-center justify-center text-center px-4">
+      <p className="text-7xl mb-4">🔍</p>
+      <h1 className="text-3xl font-black text-[#2C1810] dark:text-white mb-2">404 — Page Not Found</h1>
+      <p className="text-gray-500 dark:text-gray-400 mb-6">The page you're looking for doesn't exist.</p>
+      <Link to="/" className="bg-[#F19A0E] text-white px-8 py-3 rounded-xl font-bold hover:bg-[#d97b08] transition-colors">
+        Go Home
+      </Link>
+    </div>
+  );
+}
 
 export default function App() {
   return (
@@ -41,6 +55,7 @@ export default function App() {
                 <Route path="/about" element={<AboutPage />} />
                 <Route path="/payment-success" element={<PaymentSuccessPage />} />
                 <Route path="/seller" element={<SellerDashboardPage />} />
+                <Route path="*" element={<NotFoundPage />} />
               </Routes>
             </Layout>
             </NotificationProvider>

@@ -3,6 +3,18 @@ import react from '@vitejs/plugin-react';
 
 export default defineConfig({
   plugins: [react()],
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (id.includes('framer-motion'))        return 'motion';
+          if (id.includes('i18next'))              return 'i18n';
+          if (id.includes('node_modules/axios'))   return 'http';
+          if (id.includes('node_modules/react-dom') || id.includes('node_modules/react/') || id.includes('node_modules/react-router-dom')) return 'react-vendor';
+        },
+      },
+    },
+  },
   server: {
     port: 5173,
     proxy: {
