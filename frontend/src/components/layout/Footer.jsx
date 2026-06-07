@@ -6,10 +6,10 @@ export default function Footer() {
       <div className="absolute inset-0 pattern-tibeb opacity-20 pointer-events-none" />
 
       {/* Main grid */}
-      <div className="relative max-w-7xl mx-auto px-4 lg:px-6 py-14 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14 grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-10">
 
         {/* Brand */}
-        <div className="sm:col-span-2 lg:col-span-1">
+        <div className="col-span-2 sm:col-span-2 lg:col-span-1">
           <Link to="/" className="flex items-center gap-3 mb-4 group">
             <img src="/logo.jpg" alt="gebeya-B"
               className="h-14 w-14 object-contain rounded-full transition-transform duration-300 group-hover:scale-105"

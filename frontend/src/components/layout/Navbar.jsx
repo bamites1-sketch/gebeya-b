@@ -186,19 +186,19 @@ export default function Navbar() {
     <>
       {/* ── Navbar ── */}
       <nav className={`sticky top-0 z-40 bg-white dark:bg-gray-900 transition-shadow duration-300 ${scrolled ? 'shadow-md' : 'shadow-sm'}`}>
-        <div className="max-w-7xl mx-auto px-4 lg:px-6 h-[70px] flex items-center justify-between gap-4">
+        <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 h-[60px] sm:h-[70px] flex items-center justify-between gap-2 sm:gap-4">
 
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-3 shrink-0 group">
+          <Link to="/" className="flex items-center gap-2 sm:gap-3 shrink-0 group">
             <motion.img src="/logo.jpg" alt="gebeya-B"
-              className="h-12 w-12 object-contain rounded-full"
+              className="h-10 w-10 sm:h-12 sm:w-12 object-contain rounded-full"
               whileHover={{ scale: 1.08, rotate: 2 }}
               transition={{ duration: 0.25 }}
               style={{ filter: 'drop-shadow(0 2px 8px rgba(241,154,14,0.3))' }}
               onError={(e) => { e.currentTarget.style.display='none'; }} />
-            <div className="hidden sm:flex flex-col leading-none">
-              <span className="text-lg font-black text-[#2C1810] tracking-tight">gebeya-B</span>
-              <span className="text-[10px] text-gray-400 font-medium tracking-wide">Ethiopian Cultural Marketplace</span>
+            <div className="flex flex-col leading-none">
+              <span className="text-base sm:text-lg font-black text-[#2C1810] dark:text-white tracking-tight">gebeya-B</span>
+              <span className="hidden sm:block text-[10px] text-gray-400 font-medium tracking-wide">Ethiopian Cultural Marketplace</span>
             </div>
           </Link>
 
@@ -242,11 +242,11 @@ export default function Navbar() {
           </div>
 
           {/* Right icons */}
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-0.5 sm:gap-1">
             {/* Search */}
             <button onClick={() => setSearchOpen(true)} aria-label="Search"
-              className="w-10 h-10 flex items-center justify-center rounded-xl hover:bg-[#F5F0E8] transition-colors text-[#2C1810]/70 hover:text-[#2C1810]">
-              <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+              className="w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center rounded-xl hover:bg-[#F5F0E8] dark:hover:bg-gray-800 transition-colors text-[#2C1810]/70 dark:text-gray-300 hover:text-[#2C1810] dark:hover:text-white">
+              <svg width="17" height="17" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                 <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
               </svg>
             </button>
@@ -254,11 +254,11 @@ export default function Navbar() {
             {/* Notification Bell */}
             <NotificationBell />
 
-            {/* Language switcher */}
-            <div className="relative hidden sm:block" ref={langRef}>
+            {/* Language switcher — md+ */}
+            <div className="relative hidden md:block" ref={langRef}>
               <button
                 onClick={() => { setLangOpen(!langOpen); setUserOpen(false); setCatOpen(false); }}
-                className="flex items-center gap-1 px-2.5 py-1.5 rounded-xl hover:bg-[#F5F0E8] transition-colors text-[#2C1810]/70 hover:text-[#2C1810] text-xs font-bold border border-gray-200 hover:border-[#F19A0E]"
+                className="flex items-center gap-1 px-2 py-1.5 rounded-xl hover:bg-[#F5F0E8] dark:hover:bg-gray-800 transition-colors text-[#2C1810]/70 dark:text-gray-300 hover:text-[#2C1810] text-xs font-bold border border-gray-200 dark:border-gray-700 hover:border-[#F19A0E]"
                 aria-label="Language"
               >
                 🌐 <span>{LANGUAGES.find(l => l.code === i18n.language)?.label || 'EN'}</span>
@@ -267,14 +267,14 @@ export default function Navbar() {
               <AnimatePresence>
                 {langOpen && (
                   <motion.div variants={dropdownV} initial="hidden" animate="show" exit="exit"
-                    className="absolute right-0 top-full mt-2 w-44 bg-white rounded-2xl shadow-2xl border border-gray-100 z-50 overflow-hidden py-1">
+                    className="absolute right-0 top-full mt-2 w-44 bg-white dark:bg-gray-800 rounded-2xl shadow-2xl border border-gray-100 dark:border-gray-700 z-50 overflow-hidden py-1">
                     {LANGUAGES.map(({ code, label, name, flag }) => (
                       <button key={code}
                         onClick={() => { i18n.changeLanguage(code); localStorage.setItem('lang', code); setLangOpen(false); }}
                         className={`w-full flex items-center gap-3 px-4 py-2.5 text-sm transition-colors ${
                           i18n.language === code
                             ? 'bg-[#FEF3E2] text-[#F19A0E] font-bold'
-                            : 'text-[#2C1810] hover:bg-[#F5F0E8]'
+                            : 'text-[#2C1810] dark:text-gray-200 hover:bg-[#F5F0E8] dark:hover:bg-gray-700'
                         }`}>
                         <span>{flag}</span>
                         <span className="flex-1 text-left">{name}</span>
@@ -291,13 +291,13 @@ export default function Navbar() {
             <div className="relative" ref={userRef}>
               <button onClick={() => { setUserOpen(!userOpen); }}
                 aria-label="Account"
-                className="w-10 h-10 flex items-center justify-center rounded-xl hover:bg-[#F5F0E8] transition-colors text-[#2C1810]/70 hover:text-[#2C1810]">
+                className="w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center rounded-xl hover:bg-[#F5F0E8] dark:hover:bg-gray-800 transition-colors text-[#2C1810]/70 dark:text-gray-300">
                 {user ? (
-                  <div className="w-7 h-7 bg-[#F19A0E] rounded-full flex items-center justify-center text-white font-black text-xs">
+                  <div className="w-7 h-7 bg-[#F19A0E] rounded-full flex items-center justify-center text-white font-black text-xs shadow-sm">
                     {user.name[0].toUpperCase()}
                   </div>
                 ) : (
-                  <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                  <svg width="17" height="17" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                     <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
                   </svg>
                 )}
@@ -306,11 +306,11 @@ export default function Navbar() {
               <AnimatePresence>
                 {userOpen && (
                   <motion.div variants={dropdownV} initial="hidden" animate="show" exit="exit"
-                    className="absolute right-0 top-full mt-2 w-52 bg-white rounded-2xl shadow-2xl border border-gray-100 z-50 overflow-hidden">
+                    className="absolute right-0 top-full mt-2 w-52 bg-white dark:bg-gray-800 rounded-2xl shadow-2xl border border-gray-100 dark:border-gray-700 z-50 overflow-hidden">
                     {user ? (
                       <>
-                        <div className="px-4 py-3 bg-[#FEF3E2] border-b border-gray-100">
-                          <p className="font-bold text-[#2C1810] text-sm truncate">{user.name}</p>
+                        <div className="px-4 py-3 bg-[#FEF3E2] dark:bg-[#2C1810]/40 border-b border-gray-100 dark:border-gray-700">
+                          <p className="font-bold text-[#2C1810] dark:text-white text-sm truncate">{user.name}</p>
                           <p className="text-xs text-gray-400 truncate">{user.email}</p>
                         </div>
                         {[
@@ -321,12 +321,12 @@ export default function Navbar() {
                           ...(isAdmin ? [{ to: '/admin', icon: '⚙️', label: 'Admin Panel' }] : []),
                         ].map(({ to, icon, label }) => (
                           <Link key={label} to={to} onClick={() => setUserOpen(false)}
-                            className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-[#2C1810] hover:bg-[#FEF3E2] transition-colors">
+                            className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-[#2C1810] dark:text-gray-200 hover:bg-[#FEF3E2] dark:hover:bg-gray-700 transition-colors">
                             <span>{icon}</span>{label}
                           </Link>
                         ))}
                         <button onClick={handleLogout}
-                          className="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 transition-colors border-t border-gray-100">
+                          className="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors border-t border-gray-100 dark:border-gray-700">
                           🚪 Logout
                         </button>
                       </>
@@ -347,10 +347,10 @@ export default function Navbar() {
               </AnimatePresence>
             </div>
 
-            {/* Wishlist */}
+            {/* Wishlist — hidden on xs to save space, shown in drawer */}
             <button onClick={() => navigate('/wishlist')} aria-label="Wishlist"
-              className="relative w-10 h-10 flex items-center justify-center rounded-xl hover:bg-[#F5F0E8] transition-colors text-[#2C1810]/70 hover:text-[#2C1810]">
-              <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+              className="relative hidden xs:flex w-9 h-9 sm:w-10 sm:h-10 items-center justify-center rounded-xl hover:bg-[#F5F0E8] dark:hover:bg-gray-800 transition-colors text-[#2C1810]/70 dark:text-gray-300 hover:text-[#2C1810]">
+              <svg width="17" height="17" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                 <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
               </svg>
               {wishCount > 0 && (
@@ -362,8 +362,8 @@ export default function Navbar() {
 
             {/* Cart */}
             <button onClick={() => navigate('/cart')} aria-label="Cart"
-              className="relative w-10 h-10 flex items-center justify-center rounded-xl hover:bg-[#F5F0E8] transition-colors text-[#2C1810]/70 hover:text-[#2C1810]">
-              <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+              className="relative w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center rounded-xl hover:bg-[#F5F0E8] dark:hover:bg-gray-800 transition-colors text-[#2C1810]/70 dark:text-gray-300 hover:text-[#2C1810]">
+              <svg width="17" height="17" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                 <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
                 <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
               </svg>
@@ -379,9 +379,9 @@ export default function Navbar() {
 
             {/* Mobile hamburger */}
             <button onClick={() => setMobileOpen(true)}
-              className="lg:hidden w-10 h-10 flex items-center justify-center rounded-xl hover:bg-[#F5F0E8] transition-colors ml-1"
+              className="lg:hidden w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center rounded-xl hover:bg-[#F5F0E8] dark:hover:bg-gray-800 transition-colors ml-0.5"
               aria-label="Menu">
-              <svg width="20" height="20" fill="none" stroke="#2C1810" strokeWidth="2" viewBox="0 0 24 24">
+              <svg width="19" height="19" fill="none" stroke="currentColor" strokeWidth="2.2" viewBox="0 0 24 24" className="text-[#2C1810] dark:text-white">
                 <line x1="3" y1="6"  x2="21" y2="6"/>
                 <line x1="3" y1="12" x2="21" y2="12"/>
                 <line x1="3" y1="18" x2="21" y2="18"/>
