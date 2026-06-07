@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useWishlist } from '../context/WishlistContext';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
+import { getFirstImage } from '../utils/images';
 
 export default function WishlistPage() {
   const { t } = useTranslation();
@@ -43,12 +44,13 @@ export default function WishlistPage() {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         {items.map(({ product }) => {
-          const images = (() => { try { return JSON.parse(product.images); } catch { return []; } })();
-          const img = images[0] || `https://placehold.co/400x300/f19a0e/ffffff?text=${product.name[0]}`;
+          const img = getFirstImage(product.images, product.name);
+          const placeholder = `https://placehold.co/400x300/2C1810/F19A0E?text=${product.name[0]}`;
           return (
             <div key={product.id} className="group bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1 flex flex-col">
               <Link to={`/products/${product.id}`} className="block relative overflow-hidden aspect-[4/3]">
-                <img src={img} alt={product.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                <img src={img} alt={product.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  onError={(e) => { e.currentTarget.src = placeholder; e.currentTarget.onerror = null; }} />
                 <button onClick={(e) => { e.preventDefault(); toggle(product.id); }}
                   className="absolute top-3 right-3 w-9 h-9 bg-red-500 text-white rounded-full flex items-center justify-center shadow-md hover:bg-red-600 transition-colors hover:scale-110">
                   ♥

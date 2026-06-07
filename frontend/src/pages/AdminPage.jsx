@@ -169,8 +169,17 @@ export default function AdminPage() {
     p.category.toLowerCase().includes(search.toLowerCase())
   );
 
-  const handleVerifySeller = async (id, verified) => {
+  const handleUpdateOrderStatus = async (id, status) => {
     try {
+      await api.put(`/admin/orders/${id}/status`, { status });
+      setOrders((prev) => prev.map((o) => o.id === id ? { ...o, status } : o));
+      toast.success(`Order #${id} → ${status}`);
+    } catch {
+      toast.error('Failed to update order status');
+    }
+  };
+
+  const handleVerifySeller = async (id, verified) => {    try {
       const { data } = await api.put(`/admin/users/${id}/verify`, { verified });
       setSellers((prev) => prev.map((s) => (s.id === id ? { ...s, verified: data.verified } : s)));
       toast.success(verified ? 'Seller verified ✅' : 'Verification removed');
@@ -359,7 +368,7 @@ export default function AdminPage() {
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
                   <thead className="bg-gray-50 dark:bg-gray-700/50">
-                    <tr>{['Order ID', 'Customer', 'Items', 'Total', 'Status', 'Date'].map(h => (
+                    <tr>{['Order ID', 'Customer', 'Items', 'Total', 'Status', 'Date', 'Action'].map(h => (
                       <th key={h} className="px-6 py-3.5 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">{h}</th>
                     ))}</tr>
                   </thead>
@@ -382,6 +391,17 @@ export default function AdminPage() {
                           }`}>{o.status}</span>
                         </td>
                         <td className="px-6 py-4 text-gray-500 dark:text-gray-400 text-xs">{new Date(o.createdAt).toLocaleDateString()}</td>
+                        <td className="px-6 py-4">
+                          <select
+                            value={o.status}
+                            onChange={(e) => handleUpdateOrderStatus(o.id, e.target.value)}
+                            className="text-xs border border-gray-200 dark:border-gray-600 rounded-lg px-2 py-1.5 bg-white dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500 cursor-pointer"
+                          >
+                            {['PENDING','PROCESSING','SHIPPED','DELIVERED','CANCELLED'].map(s => (
+                              <option key={s} value={s}>{s}</option>
+                            ))}
+                          </select>
+                        </td>
                       </tr>
                     ))}
                   </tbody>
