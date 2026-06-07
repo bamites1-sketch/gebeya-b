@@ -330,7 +330,7 @@ export default function AdminPage() {
                             </span>
                           </td>
                           <td className="px-6 py-4">
-                            <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <div className="flex gap-2">
                               <button onClick={() => { setEditProduct(p); setShowForm(true); }}
                                 className="px-3 py-1.5 bg-blue-50 dark:bg-blue-900/20 text-blue-600 rounded-lg text-xs font-semibold hover:bg-blue-100 transition-colors">
                                 Edit

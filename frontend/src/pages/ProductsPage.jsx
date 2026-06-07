@@ -106,8 +106,28 @@ export default function ProductsPage() {
       </div>
 
       <div className="flex gap-8">
-        {/* Sidebar */}
-        <aside className={`${sidebarOpen ? 'block' : 'hidden'} md:block w-full md:w-64 shrink-0`}>
+        {/* Mobile filter overlay */}
+        {sidebarOpen && (
+          <div className="md:hidden fixed inset-0 z-40 flex flex-col justify-end" onClick={() => setSidebarOpen(false)}>
+            <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" />
+            <div className="relative bg-white dark:bg-gray-800 rounded-t-3xl p-5 pb-8 max-h-[80vh] overflow-y-auto shadow-2xl" onClick={(e) => e.stopPropagation()}>
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="font-bold text-gray-900 dark:text-white text-sm uppercase tracking-wider">Filters</h2>
+                <div className="flex items-center gap-3">
+                  {activeFilterCount > 0 && (
+                    <button onClick={() => { setFilters({ search: '', category: '', region: '', minPrice: '', maxPrice: '', sort: '', page: 1 }); setSidebarOpen(false); }}
+                      className="text-xs text-red-500 hover:text-red-700 font-medium">Clear all</button>
+                  )}
+                  <button onClick={() => setSidebarOpen(false)} className="w-8 h-8 flex items-center justify-center rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-500">✕</button>
+                </div>
+              </div>
+              <ProductFilters filters={filters} onChange={(f) => { setFilters(f); setSidebarOpen(false); }} />
+            </div>
+          </div>
+        )}
+
+        {/* Desktop Sidebar */}
+        <aside className="hidden md:block w-64 shrink-0">
           <div className="bg-white dark:bg-gray-800 rounded-2xl p-5 shadow-sm sticky top-24">
             <div className="flex items-center justify-between mb-4">
               <h2 className="font-bold text-gray-900 dark:text-white text-sm uppercase tracking-wider">Filters</h2>

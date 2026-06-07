@@ -164,10 +164,10 @@ export default function ProductDetailPage() {
             <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">{t('product.quantity')}:</span>
             <div className="flex items-center border-2 dark:border-gray-600 rounded-xl overflow-hidden">
               <button onClick={() => setQty(Math.max(1, qty - 1))}
-                className="w-10 h-10 flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-xl font-bold text-gray-700 dark:text-gray-200">−</button>
+                className="w-11 h-11 flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-xl font-bold text-gray-700 dark:text-gray-200">−</button>
               <span className="w-12 text-center font-bold text-gray-900 dark:text-white">{qty}</span>
               <button onClick={() => setQty(Math.min(product.stock || 99, qty + 1))}
-                className="w-10 h-10 flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-xl font-bold text-gray-700 dark:text-gray-200">+</button>
+                className="w-11 h-11 flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-xl font-bold text-gray-700 dark:text-gray-200">+</button>
             </div>
           </div>
 

@@ -68,12 +68,12 @@ export default function CartPage() {
                   <div className="flex items-center gap-3 mt-3">
                     <div className="flex items-center border dark:border-gray-600 rounded-xl overflow-hidden">
                       <button onClick={() => updateItem(item.id, item.quantity - 1)}
-                        className="w-8 h-8 flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-lg font-bold">−</button>
+                        className="w-11 h-11 flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-lg font-bold">−</button>
                       <span className="w-10 text-center text-sm font-semibold dark:text-white">{item.quantity}</span>
                       <button onClick={() => updateItem(item.id, item.quantity + 1)}
-                        className="w-8 h-8 flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-lg font-bold">+</button>
+                        className="w-11 h-11 flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-lg font-bold">+</button>
                     </div>
-                    <button onClick={() => removeItem(item.id)} className="text-xs text-red-500 hover:text-red-700 font-medium transition-colors">
+                    <button onClick={() => removeItem(item.id)} className="text-xs text-red-500 hover:text-red-700 font-medium transition-colors py-2 px-1">
                       {t('cart.remove')}
                     </button>
                   </div>

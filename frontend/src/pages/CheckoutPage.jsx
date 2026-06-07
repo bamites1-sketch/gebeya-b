@@ -61,7 +61,7 @@ export default function CheckoutPage() {
 
       <div className="grid lg:grid-cols-5 gap-8">
 
-        <div className="lg:col-span-3 space-y-6">
+        <div className="lg:col-span-3 space-y-6 order-2 lg:order-1">
           <div className="bg-white rounded-2xl p-6 shadow-sm">
             <div className="flex items-center gap-3 mb-5">
               <div className="w-12 h-12 bg-[#2C1810] rounded-xl flex items-center justify-center">
@@ -123,7 +123,7 @@ export default function CheckoutPage() {
           </p>
         </div>
 
-        <div className="lg:col-span-2">
+        <div className="lg:col-span-2 order-1 lg:order-2">
           <div className="bg-white rounded-2xl shadow-sm overflow-hidden sticky top-24">
             <div className="h-1 w-full" style={{ background: 'linear-gradient(90deg,#078930 33%,#FCDD09 33% 66%,#DA121A 66%)' }} />
             <div className="p-5">

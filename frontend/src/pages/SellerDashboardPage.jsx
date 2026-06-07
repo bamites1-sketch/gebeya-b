@@ -447,7 +447,32 @@ export default function SellerDashboardPage() {
             </div>
           ) : (
             <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm overflow-hidden">
-              <table className="w-full text-sm">
+              {/* Mobile card list */}
+              <div className="sm:hidden divide-y dark:divide-gray-700">
+                {products.map((p) => (
+                  <div key={p.id} className="p-4 flex gap-3 items-start">
+                    <img src={getFirstImage(p.images, p.name)} alt={p.name}
+                      className="w-14 h-14 object-cover rounded-xl shrink-0"
+                      onError={(e) => { e.currentTarget.src = `https://placehold.co/56x56/2C1810/F19A0E?text=${p.name[0]}`; e.currentTarget.onerror = null; }} />
+                    <div className="flex-1 min-w-0">
+                      <p className="font-semibold text-gray-900 dark:text-white text-sm truncate">{p.name}</p>
+                      <p className="text-xs text-gray-400 capitalize mt-0.5">{p.category}</p>
+                      <div className="flex items-center gap-2 mt-1.5">
+                        <span className="font-bold text-[#F19A0E] text-sm">{p.price.toLocaleString()} ETB</span>
+                        <span className={`px-2 py-0.5 rounded-full text-xs font-semibold ${p.stock > 0 ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>{p.stock} left</span>
+                      </div>
+                    </div>
+                    <div className="flex flex-col gap-1.5 shrink-0">
+                      <button onClick={() => { setEditProduct(p); setShowModal(true); }}
+                        className="px-3 py-1.5 bg-blue-50 dark:bg-blue-900/20 text-blue-600 rounded-lg text-xs font-semibold">Edit</button>
+                      <button onClick={() => handleDelete(p.id)}
+                        className="px-3 py-1.5 bg-red-50 dark:bg-red-900/20 text-red-600 rounded-lg text-xs font-semibold">Delete</button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              {/* Desktop table */}
+              <table className="hidden sm:table w-full text-sm">
                 <thead className="bg-gray-50 dark:bg-gray-700/50">
                   <tr>{['Product', 'Category', 'Price', 'Stock', 'Actions'].map((h) => (
                     <th key={h} className="px-5 py-3.5 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">{h}</th>
@@ -455,7 +480,7 @@ export default function SellerDashboardPage() {
                 </thead>
                 <tbody className="divide-y dark:divide-gray-700">
                   {products.map((p) => (
-                    <tr key={p.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/30 transition-colors group">
+                    <tr key={p.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/30 transition-colors">
                       <td className="px-5 py-3 flex items-center gap-3">
                         <img src={getFirstImage(p.images, p.name)} alt={p.name}
                           className="w-10 h-10 object-cover rounded-lg shrink-0"
@@ -473,7 +498,7 @@ export default function SellerDashboardPage() {
                         </span>
                       </td>
                       <td className="px-5 py-3">
-                        <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <div className="flex gap-2">
                           <button onClick={() => { setEditProduct(p); setShowModal(true); }}
                             className="px-3 py-1.5 bg-blue-50 dark:bg-blue-900/20 text-blue-600 rounded-lg text-xs font-semibold hover:bg-blue-100 transition-colors">
                             Edit
