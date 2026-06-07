@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 
-const CATEGORIES = ['clothing', 'crafts', 'accessories', 'jewelry', 'art', 'food', 'music'];
+const CATEGORIES = ['clothing', 'crafts', 'accessories', 'jewelry', 'art', 'food', 'music', 'electronics'];
 const REGIONS = ['addis_ababa', 'oromia', 'amhara', 'tigray', 'snnpr', 'somali', 'afar', 'harari'];
 
 function FilterSection({ title, children }) {

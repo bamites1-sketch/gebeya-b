@@ -32,6 +32,7 @@ const CATS = [
   { key: 'food',        label: 'Food &\nDrink',           img: 'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=200&q=80' },
   { key: 'music',       label: 'Musical\nInstruments',    img: 'https://images.unsplash.com/photo-1510915361894-db8b60106cb1?w=200&q=80' },
   { key: 'accessories', label: 'Accessories\n& Jewelry',  img: 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=200&q=80' },
+  { key: 'electronics', label: 'Electronics',             img: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=200&q=80' },
 ];
 
 // ── Counter animation ─────────────────────────────────────────────

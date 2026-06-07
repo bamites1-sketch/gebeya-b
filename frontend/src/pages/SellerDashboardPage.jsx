@@ -7,7 +7,7 @@ import toast from 'react-hot-toast';
 import { getFirstImage } from '../utils/images';
 import VerifiedSellerBadge from '../components/ui/VerifiedSellerBadge';
 
-const CATEGORIES = ['clothing', 'crafts', 'accessories', 'jewelry', 'art', 'food', 'music'];
+const CATEGORIES = ['clothing', 'crafts', 'accessories', 'jewelry', 'art', 'food', 'music', 'electronics'];
 const REGIONS = ['addis_ababa', 'oromia', 'amhara', 'tigray', 'snnpr', 'somali', 'afar', 'harari'];
 
 const CONDITIONS = ['New', 'Used', 'Refurbished', 'Like New'];

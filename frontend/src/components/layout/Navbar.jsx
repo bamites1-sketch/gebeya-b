@@ -18,13 +18,14 @@ const LANGUAGES = [
 ];
 
 const CATEGORIES = [
-  { label: 'Traditional Clothing',  to: '/products?category=clothing',    icon: '👗' },
-  { label: 'Handmade Crafts',       to: '/products?category=crafts',       icon: '🏺' },
-  { label: 'Musical Instruments',   to: '/products?category=music',        icon: '🎵' },
-  { label: 'Art & Paintings',       to: '/products?category=art',          icon: '🎨' },
-  { label: 'Traditional Food',      to: '/products?category=food',         icon: '☕' },
-  { label: 'Accessories & Jewelry', to: '/products?category=accessories',  icon: '💍' },
-  { label: 'Cultural Items',        to: '/products?category=crafts',       icon: '✝️' },
+  { label: 'Traditional Clothing',  to: '/products?category=clothing',     icon: '👗' },
+  { label: 'Handmade Crafts',       to: '/products?category=crafts',        icon: '🏺' },
+  { label: 'Musical Instruments',   to: '/products?category=music',         icon: '🎵' },
+  { label: 'Art & Paintings',       to: '/products?category=art',           icon: '🎨' },
+  { label: 'Traditional Food',      to: '/products?category=food',          icon: '☕' },
+  { label: 'Accessories & Jewelry', to: '/products?category=accessories',   icon: '💍' },
+  { label: 'Cultural Items',        to: '/products?category=crafts',        icon: '✝️' },
+  { label: 'Electronics',           to: '/products?category=electronics',   icon: '📱' },
 ];
 
 const dropdownV = {

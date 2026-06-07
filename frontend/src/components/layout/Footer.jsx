@@ -64,6 +64,7 @@ export default function Footer() {
               ['art',      '🎨 Art & Paintings'],
               ['food',     '☕ Traditional Food'],
               ['accessories', '💍 Accessories'],
+              ['electronics', '📱 Electronics'],
             ].map(([key, label]) => (
               <li key={key}>
                 <Link to={`/products?category=${key}`} className="hover:text-[#F19A0E] transition-colors">{label}</Link>
