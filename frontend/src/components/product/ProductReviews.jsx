@@ -34,9 +34,9 @@ function ReviewCard({ review, onDelete, currentUserId }) {
       animate={{ opacity: 1, y: 0 }}
       className="bg-white dark:bg-gray-800 rounded-2xl p-5 shadow-sm"
     >
-      <div className="flex items-start justify-between gap-3">
+      <div className="flex items-start justify-between gap-3 flex-wrap">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-[#F19A0E] rounded-full flex items-center justify-center text-white font-black text-sm shrink-0">
+          <div className="w-9 h-9 sm:w-10 sm:h-10 bg-[#F19A0E] rounded-full flex items-center justify-center text-white font-black text-sm shrink-0">
             {review.user.name[0].toUpperCase()}
           </div>
           <div>
@@ -48,7 +48,7 @@ function ReviewCard({ review, onDelete, currentUserId }) {
           <StarRating value={review.rating} size="md" />
           {isOwn && (
             <button onClick={() => onDelete(review.id)}
-              className="text-xs text-red-400 hover:text-red-600 transition-colors ml-2 font-medium">
+              className="text-xs text-red-400 hover:text-red-600 transition-colors ml-1 font-medium px-2 py-1 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20">
               Delete
             </button>
           )}
@@ -123,20 +123,20 @@ export default function ProductReviews({ productId }) {
   }));
 
   return (
-    <section className="mt-16">
-      <div className="flex items-center justify-between mb-6">
-        <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+    <section className="mt-12 sm:mt-16">
+      <div className="flex flex-col xs:flex-row xs:items-center justify-between gap-3 mb-6">
+        <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">
           Customer Reviews
-          {total > 0 && <span className="text-base font-normal text-gray-400 ml-2">({total})</span>}
+          {total > 0 && <span className="text-sm sm:text-base font-normal text-gray-400 ml-2">({total})</span>}
         </h2>
         {user && !hasReviewed && !showForm && (
           <button onClick={() => setShowForm(true)}
-            className="px-5 py-2 bg-[#F19A0E] hover:bg-[#d97b08] text-white rounded-xl text-sm font-bold transition-colors">
+            className="self-start xs:self-auto px-4 sm:px-5 py-2 bg-[#F19A0E] hover:bg-[#d97b08] text-white rounded-xl text-sm font-bold transition-colors shrink-0">
             Write a Review
           </button>
         )}
         {!user && (
-          <Link to="/login" className="px-5 py-2 border-2 border-[#F19A0E] text-[#F19A0E] rounded-xl text-sm font-bold hover:bg-[#FEF3E2] transition-colors">
+          <Link to="/login" className="self-start xs:self-auto px-4 sm:px-5 py-2 border-2 border-[#F19A0E] text-[#F19A0E] rounded-xl text-sm font-bold hover:bg-[#FEF3E2] transition-colors shrink-0">
             Login to Review
           </Link>
         )}

@@ -91,16 +91,16 @@ export default function ProductsPage() {
   const activeFilterCount = [filters.category, filters.region, filters.minPrice, filters.maxPrice, filters.search].filter(Boolean).length;
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-8">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
       {/* Page header */}
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex items-center justify-between mb-5 sm:mb-6">
         <div>
-          <h1 className="text-3xl font-black text-gray-900 dark:text-white">{t('nav.products')}</h1>
-          {!loading && <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">{total} products found</p>}
+          <h1 className="text-2xl sm:text-3xl font-black text-gray-900 dark:text-white">{t('nav.products')}</h1>
+          {!loading && <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 mt-1">{total} products found</p>}
         </div>
         {/* Mobile filter toggle */}
         <button onClick={() => setSidebarOpen(!sidebarOpen)}
-          className="md:hidden flex items-center gap-2 px-4 py-2 bg-white dark:bg-gray-800 border dark:border-gray-700 rounded-xl text-sm font-semibold shadow-sm">
+          className="md:hidden flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 bg-white dark:bg-gray-800 border dark:border-gray-700 rounded-xl text-xs sm:text-sm font-semibold shadow-sm">
           🔧 Filters {activeFilterCount > 0 && <span className="bg-primary-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">{activeFilterCount}</span>}
         </button>
       </div>
@@ -128,7 +128,7 @@ export default function ProductsPage() {
 
         {/* Desktop Sidebar */}
         <aside className="hidden md:block w-64 shrink-0">
-          <div className="bg-white dark:bg-gray-800 rounded-2xl p-5 shadow-sm sticky top-24">
+          <div className="bg-white dark:bg-gray-800 rounded-2xl p-4 sm:p-5 shadow-sm sticky top-20 sm:top-24">
             <div className="flex items-center justify-between mb-4">
               <h2 className="font-bold text-gray-900 dark:text-white text-sm uppercase tracking-wider">Filters</h2>
               {activeFilterCount > 0 && (

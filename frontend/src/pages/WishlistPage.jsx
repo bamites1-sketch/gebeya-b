@@ -36,13 +36,13 @@ export default function WishlistPage() {
   );
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-10">
-      <div className="flex items-center justify-between mb-8">
-        <h1 className="text-3xl font-black text-gray-900 dark:text-white">{t('wishlist.title')}</h1>
+    <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-10">
+      <div className="flex items-center justify-between mb-6 sm:mb-8">
+        <h1 className="text-2xl sm:text-3xl font-black text-gray-900 dark:text-white">{t('wishlist.title')}</h1>
         <span className="text-sm text-gray-500 dark:text-gray-400">{items.length} item{items.length !== 1 ? 's' : ''}</span>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-5 lg:gap-6">
         {items.map(({ product }) => {
           const img = getFirstImage(product.images, product.name);
           const placeholder = `https://placehold.co/400x300/2C1810/F19A0E?text=${product.name[0]}`;

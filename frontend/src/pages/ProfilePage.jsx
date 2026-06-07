@@ -79,15 +79,15 @@ export default function ProfilePage() {
   );
 
   return (
-    <div className="max-w-5xl mx-auto px-4 py-10">
+    <div className="max-w-5xl mx-auto px-4 sm:px-6 py-8 sm:py-10">
       {/* Header */}
-      <div className="flex items-center gap-5 mb-10">
-        <div className="w-20 h-20 bg-gradient-to-br from-primary-400 to-primary-600 text-white rounded-2xl flex items-center justify-center text-3xl font-black shadow-lg">
+      <div className="flex items-center gap-4 sm:gap-5 mb-8 sm:mb-10">
+        <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-primary-400 to-primary-600 text-white rounded-2xl flex items-center justify-center text-2xl sm:text-3xl font-black shadow-lg shrink-0">
           {user.name[0].toUpperCase()}
         </div>
-        <div>
-          <h1 className="text-2xl font-black text-gray-900 dark:text-white">{user.name}</h1>
-          <p className="text-gray-500 dark:text-gray-400 text-sm">{user.email}</p>
+        <div className="min-w-0">
+          <h1 className="text-xl sm:text-2xl font-black text-gray-900 dark:text-white truncate">{user.name}</h1>
+          <p className="text-gray-500 dark:text-gray-400 text-sm truncate">{user.email}</p>
           <span className={`inline-block mt-1 text-xs font-semibold px-2.5 py-0.5 rounded-full ${user.role === 'ADMIN' ? 'bg-primary-100 text-primary-700 dark:bg-primary-900/30 dark:text-primary-400' : 'bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-300'}`}>
             {user.role}
           </span>
@@ -95,10 +95,10 @@ export default function ProfilePage() {
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-1 mb-8 bg-gray-100 dark:bg-gray-800 p-1 rounded-xl w-fit">
+      <div className="flex gap-1 mb-6 sm:mb-8 bg-gray-100 dark:bg-gray-800 p-1 rounded-xl w-fit max-w-full overflow-x-auto scrollbar-hide">
         {[['profile', '👤', 'Profile'], ['orders', '📦', `Orders (${orders.length})`]].map(([key, icon, label]) => (
           <button key={key} onClick={() => setActiveTab(key)}
-            className={`flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-semibold transition-all ${activeTab === key ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm' : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200'}`}>
+            className={`flex items-center gap-1.5 sm:gap-2 px-4 sm:px-5 py-2 sm:py-2.5 rounded-lg text-xs sm:text-sm font-semibold transition-all whitespace-nowrap ${activeTab === key ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm' : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200'}`}>
             <span>{icon}</span>{label}
           </button>
         ))}
