@@ -144,3 +144,10 @@ model Notification {
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
 }
+
+// Key-value store for site-wide settings (payment accounts, etc.)
+model SiteConfig {
+  key       String   @id
+  value     String   @db.Text
+  updatedAt DateTime @updatedAt
+}

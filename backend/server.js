@@ -37,6 +37,19 @@ app.use('/api/seller', require('./routes/seller.routes'));
 app.use('/api/notifications', require('./routes/notification.routes'));
 app.use('/api/admin', require('./routes/admin.routes'));
 
+// Public site config — returns payment accounts for checkout page (no auth)
+app.get('/api/config/payment', async (req, res) => {
+  try {
+    const prisma = require('./lib/prisma');
+    const rows = await prisma.siteConfig.findMany({
+      where: { key: { startsWith: 'payment_' } },
+    });
+    res.json(Object.fromEntries(rows.map(r => [r.key, r.value])));
+  } catch {
+    res.json({});
+  }
+});
+
 // Root route
 app.get('/', (req, res) => {
   res.json({

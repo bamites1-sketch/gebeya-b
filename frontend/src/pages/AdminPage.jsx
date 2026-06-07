@@ -126,6 +126,10 @@ export default function AdminPage() {
   const [editProduct, setEditProduct] = useState(null);
   const [showForm, setShowForm] = useState(false);
   const [search, setSearch] = useState('');
+  // Payment settings
+  const [payConfig, setPayConfig] = useState({});
+  const [payForm, setPayForm] = useState({});
+  const [savingPay, setSavingPay] = useState(false);
 
   useEffect(() => {
     if (!isAdmin) { navigate('/'); return; }
@@ -135,20 +139,38 @@ export default function AdminPage() {
   const loadData = async () => {
     setLoading(true);
     try {
-      const [s, p, o, u] = await Promise.all([
+      const [s, p, o, u, cfg] = await Promise.all([
         api.get('/admin/stats'),
         api.get('/products?limit=100'),
         api.get('/admin/orders'),
         api.get('/admin/users'),
+        api.get('/admin/config'),
       ]);
       setStats(s.data);
       setProducts(p.data.products || []);
       setOrders(o.data || []);
       setSellers((u.data || []).filter((user) => user.role === 'SELLER'));
+      setPayConfig(cfg.data || {});
+      setPayForm(cfg.data || {});
     } catch {
       toast.error('Failed to load data');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleSavePayConfig = async (e) => {
+    e.preventDefault();
+    setSavingPay(true);
+    try {
+      const { data } = await api.put('/admin/config', payForm);
+      setPayConfig(data);
+      setPayForm(data);
+      toast.success('Payment accounts updated ✅');
+    } catch {
+      toast.error('Failed to save');
+    } finally {
+      setSavingPay(false);
     }
   };
 
@@ -193,6 +215,7 @@ export default function AdminPage() {
     { key: 'products', icon: '🛍️', label: t('admin.products') },
     { key: 'orders', icon: '📦', label: t('admin.orders') },
     { key: 'sellers', icon: '✅', label: 'Sellers' },
+    { key: 'settings', icon: '⚙️', label: 'Settings' },
   ];
 
   return (
@@ -459,6 +482,128 @@ export default function AdminPage() {
                 </tbody>
               </table>
             )}
+          </div>
+        )}
+
+        {/* ── Settings ── */}
+        {tab === 'settings' && (
+          <div className="max-w-2xl space-y-6">
+            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm overflow-hidden">
+              <div className="px-6 py-4 border-b dark:border-gray-700">
+                <h3 className="font-bold text-gray-900 dark:text-white">💳 Payment Account Numbers</h3>
+                <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">
+                  These are shown to customers when they choose Direct Bank Transfer on checkout.
+                </p>
+              </div>
+              <form onSubmit={handleSavePayConfig} className="p-6 space-y-6">
+
+                {/* CBE */}
+                <div className="space-y-3 p-4 bg-yellow-50 dark:bg-yellow-900/10 rounded-2xl border border-yellow-100 dark:border-yellow-800">
+                  <div className="flex items-center gap-2 mb-2">
+                    <img src="/images/cbe.png" alt="CBE" className="w-7 h-7 object-contain rounded-lg bg-white p-0.5 shadow-sm"
+                      onError={(e) => { e.currentTarget.style.display='none'; }} />
+                    <p className="font-bold text-[#2C1810] dark:text-white text-sm">CBE Birr (Commercial Bank of Ethiopia)</p>
+                  </div>
+                  <div className="grid sm:grid-cols-2 gap-3">
+                    <div>
+                      <label className="text-xs font-semibold text-gray-600 dark:text-gray-300 block mb-1">Account Number</label>
+                      <input value={payForm.payment_cbe_account || ''}
+                        onChange={(e) => setPayForm(f => ({ ...f, payment_cbe_account: e.target.value }))}
+                        placeholder="e.g. 1000524532771"
+                        className="w-full px-3 py-2.5 border border-gray-200 dark:border-gray-600 rounded-xl text-sm font-mono dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500" />
+                    </div>
+                    <div>
+                      <label className="text-xs font-semibold text-gray-600 dark:text-gray-300 block mb-1">Account Name</label>
+                      <input value={payForm.payment_cbe_name || ''}
+                        onChange={(e) => setPayForm(f => ({ ...f, payment_cbe_name: e.target.value }))}
+                        placeholder="e.g. Beamlak Tesfahun"
+                        className="w-full px-3 py-2.5 border border-gray-200 dark:border-gray-600 rounded-xl text-sm dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500" />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Telebirr */}
+                <div className="space-y-3 p-4 bg-blue-50 dark:bg-blue-900/10 rounded-2xl border border-blue-100 dark:border-blue-800">
+                  <div className="flex items-center gap-2 mb-2">
+                    <img src="/images/telebirr.png" alt="Telebirr" className="w-7 h-7 object-contain rounded-lg bg-white p-0.5 shadow-sm"
+                      onError={(e) => { e.currentTarget.style.display='none'; }} />
+                    <p className="font-bold text-[#2C1810] dark:text-white text-sm">Telebirr</p>
+                  </div>
+                  <div className="grid sm:grid-cols-2 gap-3">
+                    <div>
+                      <label className="text-xs font-semibold text-gray-600 dark:text-gray-300 block mb-1">Phone / Account</label>
+                      <input value={payForm.payment_telebirr_account || ''}
+                        onChange={(e) => setPayForm(f => ({ ...f, payment_telebirr_account: e.target.value }))}
+                        placeholder="e.g. 0975731806"
+                        className="w-full px-3 py-2.5 border border-gray-200 dark:border-gray-600 rounded-xl text-sm font-mono dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500" />
+                    </div>
+                    <div>
+                      <label className="text-xs font-semibold text-gray-600 dark:text-gray-300 block mb-1">Account Name</label>
+                      <input value={payForm.payment_telebirr_name || ''}
+                        onChange={(e) => setPayForm(f => ({ ...f, payment_telebirr_name: e.target.value }))}
+                        placeholder="e.g. Beamlak Tesfahun"
+                        className="w-full px-3 py-2.5 border border-gray-200 dark:border-gray-600 rounded-xl text-sm dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500" />
+                    </div>
+                  </div>
+                </div>
+
+                {/* BOA */}
+                <div className="space-y-3 p-4 bg-amber-50 dark:bg-amber-900/10 rounded-2xl border border-amber-100 dark:border-amber-800">
+                  <div className="flex items-center gap-2 mb-2">
+                    <img src="/images/boa.png" alt="BOA" className="w-7 h-7 object-contain rounded-lg bg-white p-0.5 shadow-sm"
+                      onError={(e) => { e.currentTarget.style.display='none'; }} />
+                    <p className="font-bold text-[#2C1810] dark:text-white text-sm">Bank of Abyssinia (BOA)</p>
+                  </div>
+                  <div className="grid sm:grid-cols-2 gap-3">
+                    <div>
+                      <label className="text-xs font-semibold text-gray-600 dark:text-gray-300 block mb-1">Account Number</label>
+                      <input value={payForm.payment_boa_account || ''}
+                        onChange={(e) => setPayForm(f => ({ ...f, payment_boa_account: e.target.value }))}
+                        placeholder="Leave blank if unavailable"
+                        className="w-full px-3 py-2.5 border border-gray-200 dark:border-gray-600 rounded-xl text-sm font-mono dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500" />
+                    </div>
+                    <div>
+                      <label className="text-xs font-semibold text-gray-600 dark:text-gray-300 block mb-1">Account Name</label>
+                      <input value={payForm.payment_boa_name || ''}
+                        onChange={(e) => setPayForm(f => ({ ...f, payment_boa_name: e.target.value }))}
+                        placeholder="e.g. Beamlak Tesfahun"
+                        className="w-full px-3 py-2.5 border border-gray-200 dark:border-gray-600 rounded-xl text-sm dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500" />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Awash */}
+                <div className="space-y-3 p-4 bg-orange-50 dark:bg-orange-900/10 rounded-2xl border border-orange-100 dark:border-orange-800">
+                  <div className="flex items-center gap-2 mb-2">
+                    <img src="/images/awash.png" alt="Awash" className="w-7 h-7 object-contain rounded-lg bg-white p-0.5 shadow-sm"
+                      onError={(e) => { e.currentTarget.style.display='none'; }} />
+                    <p className="font-bold text-[#2C1810] dark:text-white text-sm">Awash Bank</p>
+                  </div>
+                  <div className="grid sm:grid-cols-2 gap-3">
+                    <div>
+                      <label className="text-xs font-semibold text-gray-600 dark:text-gray-300 block mb-1">Account Number</label>
+                      <input value={payForm.payment_awash_account || ''}
+                        onChange={(e) => setPayForm(f => ({ ...f, payment_awash_account: e.target.value }))}
+                        placeholder="Leave blank if unavailable"
+                        className="w-full px-3 py-2.5 border border-gray-200 dark:border-gray-600 rounded-xl text-sm font-mono dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500" />
+                    </div>
+                    <div>
+                      <label className="text-xs font-semibold text-gray-600 dark:text-gray-300 block mb-1">Account Name</label>
+                      <input value={payForm.payment_awash_name || ''}
+                        onChange={(e) => setPayForm(f => ({ ...f, payment_awash_name: e.target.value }))}
+                        placeholder="e.g. Beamlak Tesfahun"
+                        className="w-full px-3 py-2.5 border border-gray-200 dark:border-gray-600 rounded-xl text-sm dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500" />
+                    </div>
+                  </div>
+                </div>
+
+                <button type="submit" disabled={savingPay}
+                  className="w-full py-3.5 bg-primary-500 hover:bg-primary-600 text-white rounded-xl font-bold transition-colors disabled:opacity-60 flex items-center justify-center gap-2">
+                  {savingPay && <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />}
+                  {savingPay ? 'Saving...' : '💾 Save Payment Accounts'}
+                </button>
+              </form>
+            </div>
           </div>
         )}
       </div>
