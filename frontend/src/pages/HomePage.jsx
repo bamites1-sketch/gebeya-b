@@ -143,7 +143,7 @@ export default function HomePage() {
               <div className="h-px w-6 bg-[#F19A0E]" />
             </div>
 
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-[#2C1810] leading-tight mb-5">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-[#2C1810] leading-tight mb-5">
               {t('hero.title').split("'s").length > 1 ? (
                 <>{t('hero.title').split('\n')[0]}<br /><span className="text-[#078930]">{t('hero.title').split('\n')[1] || 'Rich Heritage'}</span></>
               ) : (
@@ -346,7 +346,7 @@ export default function HomePage() {
               <p className="font-bold text-gray-600 text-sm">Server warming up — products loading shortly...</p>
             </div>
           ) : (
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
               {featured.map((p) => <HomeProductCard key={p.id} product={p} />)}
             </div>
           )}
@@ -417,10 +417,10 @@ export default function HomePage() {
               </div>
               <h2 className="text-2xl lg:text-3xl font-black text-white mb-3">{t('home.newsletter_title')}</h2>
               <p className="text-white/60 mb-8">{t('home.newsletter_sub')}</p>
-              <div className="flex gap-2 max-w-md mx-auto">
+              <div className="flex flex-col sm:flex-row gap-2 max-w-md mx-auto">
                 <input type="email" placeholder={t('home.email_placeholder')}
                   className="flex-1 px-4 py-3.5 rounded-xl bg-white/10 border border-white/20 text-white placeholder-white/40 text-sm focus:outline-none focus:border-[#F19A0E] transition-colors" />
-                <button className="px-6 py-3.5 bg-[#F19A0E] hover:bg-[#d97b08] text-white rounded-xl font-bold text-sm transition-colors shrink-0">
+                <button className="px-6 py-3.5 bg-[#F19A0E] hover:bg-[#d97b08] text-white rounded-xl font-bold text-sm transition-colors sm:shrink-0">
                   {t('home.subscribe')}
                 </button>
               </div>

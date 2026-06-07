@@ -82,8 +82,8 @@ export default function ProductCard({ product }) {
           <button
             onClick={() => addToCart(product.id)}
             disabled={product.stock === 0}
-            className="flex items-center gap-1.5 bg-primary-500 hover:bg-primary-600 active:bg-primary-700 text-white px-3.5 py-2 rounded-xl text-xs font-semibold transition-colors disabled:opacity-40 disabled:cursor-not-allowed">
-            🛒 {t('product.add_to_cart')}
+            className="flex items-center gap-1.5 bg-primary-500 hover:bg-primary-600 active:bg-primary-700 text-white px-3 py-2 rounded-xl text-xs font-semibold transition-colors disabled:opacity-40 disabled:cursor-not-allowed">
+            🛒 <span className="hidden xs:inline">{t('product.add_to_cart')}</span>
           </button>
         </div>
       </div>
