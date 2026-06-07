@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const baseURL = 'https://gebeya-b-api.onrender.com/api';
+const baseURL = import.meta.env.VITE_API_URL || 'https://gebeya-b-api.onrender.com/api';
 
 const api = axios.create({
   baseURL,

@@ -64,11 +64,11 @@ const updateCartItem = async (req, res, next) => {
       await prisma.cartItem.update({ where: { id: itemId }, data: { quantity: parseInt(quantity) } });
     }
 
-    const cart = await prisma.cart.findUnique({
+    const updatedCart = await prisma.cart.findUnique({
       where: { userId: req.user.id },
       include: { items: { include: { product: true } } },
     });
-    res.json(cart);
+    res.json(updatedCart);
   } catch (error) {
     next(error);
   }
@@ -83,11 +83,11 @@ const removeFromCart = async (req, res, next) => {
     if (!item) return res.status(403).json({ message: 'Item not in your cart' });
 
     await prisma.cartItem.delete({ where: { id: itemId } });
-    const cart = await prisma.cart.findUnique({
+    const updatedCart = await prisma.cart.findUnique({
       where: { userId: req.user.id },
       include: { items: { include: { product: true } } },
     });
-    res.json(cart);
+    res.json(updatedCart);
   } catch (error) {
     next(error);
   }
