@@ -8,7 +8,26 @@ export const AuthProvider = ({ children }) => {
     const stored = localStorage.getItem('user');
     return stored ? JSON.parse(stored) : null;
   });
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true); // true until token is verified
+
+  // Verify token on mount — clears stale localStorage if JWT is expired
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (!token) { setLoading(false); return; }
+    api.get('/auth/me')
+      .then(({ data }) => {
+        // Refresh user from server (role/verified may have changed)
+        localStorage.setItem('user', JSON.stringify(data));
+        setUser(data);
+      })
+      .catch(() => {
+        // Token expired or invalid — clear everything
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        setUser(null);
+      })
+      .finally(() => setLoading(false));
+  }, []);
 
   const login = async (email, password) => {
     const { data } = await api.post('/auth/login', { email, password });

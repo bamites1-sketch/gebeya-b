@@ -53,6 +53,11 @@ const updateCartItem = async (req, res, next) => {
     const { quantity } = req.body;
     const itemId = parseInt(req.params.itemId);
 
+    // Verify this item belongs to the requesting user's cart
+    const cart = await prisma.cart.findUnique({ where: { userId: req.user.id } });
+    const item = await prisma.cartItem.findFirst({ where: { id: itemId, cartId: cart?.id } });
+    if (!item) return res.status(403).json({ message: 'Item not in your cart' });
+
     if (parseInt(quantity) <= 0) {
       await prisma.cartItem.delete({ where: { id: itemId } });
     } else {
@@ -71,7 +76,13 @@ const updateCartItem = async (req, res, next) => {
 
 const removeFromCart = async (req, res, next) => {
   try {
-    await prisma.cartItem.delete({ where: { id: parseInt(req.params.itemId) } });
+    const itemId = parseInt(req.params.itemId);
+    // Verify ownership before deleting
+    const cart = await prisma.cart.findUnique({ where: { userId: req.user.id } });
+    const item = await prisma.cartItem.findFirst({ where: { id: itemId, cartId: cart?.id } });
+    if (!item) return res.status(403).json({ message: 'Item not in your cart' });
+
+    await prisma.cartItem.delete({ where: { id: itemId } });
     const cart = await prisma.cart.findUnique({
       where: { userId: req.user.id },
       include: { items: { include: { product: true } } },

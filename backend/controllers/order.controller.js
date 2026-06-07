@@ -106,9 +106,14 @@ const getAllOrders = async (req, res, next) => {
   }
 };
 
+const VALID_STATUSES = ['PENDING', 'PROCESSING', 'SHIPPED', 'DELIVERED', 'CANCELLED'];
+
 const updateOrderStatus = async (req, res, next) => {
   try {
     const { status } = req.body;
+    if (!VALID_STATUSES.includes(status)) {
+      return res.status(400).json({ message: `Invalid status. Must be one of: ${VALID_STATUSES.join(', ')}` });
+    }
     const order = await prisma.order.update({
       where: { id: parseInt(req.params.id) },
       data: { status },

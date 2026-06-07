@@ -24,15 +24,18 @@ export default function ProfilePage() {
   const [ordersLoading, setOrdersLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('profile');
   const [becomingSeller, setBecomingSeller] = useState(false);
+  const [sellerForm, setSellerForm] = useState({ shopName: '', bio: '' });
+  const [showSellerForm, setShowSellerForm] = useState(false);
 
-  const handleBecomeSeller = async () => {
-    const shopName = prompt('Enter your shop name:');
-    if (!shopName?.trim()) return;
+  const handleBecomeSeller = async (e) => {
+    e.preventDefault();
+    if (!sellerForm.shopName.trim()) { toast.error('Shop name is required'); return; }
     setBecomingSeller(true);
     try {
-      const { data } = await api.post('/seller/apply', { shopName: shopName.trim() });
+      const { data } = await api.post('/seller/apply', { shopName: sellerForm.shopName.trim(), bio: sellerForm.bio.trim() });
       updateUser(data.user);
-      toast.success('🎉 Seller account activated! You can now add products.');
+      toast.success('🎉 Seller account activated!');
+      setShowSellerForm(false);
     } catch (err) {
       toast.error(err.response?.data?.message || 'Failed to activate seller account');
     } finally {
@@ -49,6 +52,7 @@ export default function ProfilePage() {
 
   const handleSave = async (e) => {
     e.preventDefault();
+    if (!form.name.trim()) { toast.error('Name cannot be empty'); return; }
     setSaving(true);
     try {
       const payload = { name: form.name };
@@ -132,14 +136,40 @@ export default function ProfilePage() {
                   <p className="text-sm text-gray-500 dark:text-gray-400 mb-3">
                     List your Ethiopian cultural products and reach customers worldwide. Free to join.
                   </p>
-                  <button
-                    onClick={handleBecomeSeller}
-                    disabled={becomingSeller}
-                    className="px-5 py-2.5 bg-[#078930] hover:bg-[#056b25] text-white rounded-xl font-bold text-sm transition-colors disabled:opacity-60 flex items-center gap-2"
-                  >
-                    {becomingSeller && <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />}
-                    {becomingSeller ? 'Activating...' : '🇪🇹 Become a Seller'}
-                  </button>
+                  {!showSellerForm ? (
+                    <button
+                      onClick={() => setShowSellerForm(true)}
+                      className="px-5 py-2.5 bg-[#078930] hover:bg-[#056b25] text-white rounded-xl font-bold text-sm transition-colors">
+                      🇪🇹 Become a Seller
+                    </button>
+                  ) : (
+                    <form onSubmit={handleBecomeSeller} className="space-y-3">
+                      <input
+                        value={sellerForm.shopName}
+                        onChange={(e) => setSellerForm(f => ({ ...f, shopName: e.target.value }))}
+                        placeholder="Shop name *"
+                        required
+                        className="w-full px-3 py-2.5 border border-gray-200 dark:border-gray-600 rounded-xl text-sm dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#F19A0E]"
+                      />
+                      <input
+                        value={sellerForm.bio}
+                        onChange={(e) => setSellerForm(f => ({ ...f, bio: e.target.value }))}
+                        placeholder="About your shop (optional)"
+                        className="w-full px-3 py-2.5 border border-gray-200 dark:border-gray-600 rounded-xl text-sm dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#F19A0E]"
+                      />
+                      <div className="flex gap-2">
+                        <button type="submit" disabled={becomingSeller}
+                          className="px-5 py-2.5 bg-[#078930] hover:bg-[#056b25] text-white rounded-xl font-bold text-sm transition-colors disabled:opacity-60 flex items-center gap-2">
+                          {becomingSeller && <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />}
+                          {becomingSeller ? 'Activating...' : 'Activate'}
+                        </button>
+                        <button type="button" onClick={() => setShowSellerForm(false)}
+                          className="px-5 py-2.5 border border-gray-200 dark:border-gray-600 text-gray-600 dark:text-gray-300 rounded-xl font-bold text-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                          Cancel
+                        </button>
+                      </div>
+                    </form>
+                  )}
                 </div>
               </div>
             </div>

@@ -9,7 +9,12 @@ const app = express();
 
 // Middleware
 app.use(cors({
-  origin: true,
+  origin: (origin, callback) => {
+    const allowed = (process.env.ALLOWED_ORIGINS || 'https://gebeya-b.vercel.app,http://localhost:5173').split(',').map(s => s.trim());
+    // Allow requests with no origin (curl, Postman, server-to-server)
+    if (!origin || allowed.includes(origin)) return callback(null, true);
+    callback(new Error(`CORS: ${origin} not allowed`));
+  },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],

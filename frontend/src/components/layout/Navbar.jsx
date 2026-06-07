@@ -169,11 +169,14 @@ export default function Navbar() {
   const NavLink = ({ to, children }) => (
     <Link to={to}
       className={`relative text-sm font-semibold transition-colors pb-1 group ${
-        isActive(to) ? 'text-[#2C1810]' : 'text-[#2C1810]/70 hover:text-[#2C1810]'
+        isActive(to) || (to === '/products' && location.pathname.startsWith('/products'))
+          ? 'text-[#2C1810] dark:text-white'
+          : 'text-[#2C1810]/70 dark:text-gray-300 hover:text-[#2C1810] dark:hover:text-white'
       }`}>
       {children}
       <span className={`absolute bottom-0 left-0 h-0.5 bg-[#F19A0E] rounded-full transition-all duration-300 ${
-        isActive(to) ? 'w-full' : 'w-0 group-hover:w-full'
+        isActive(to) || (to === '/products' && location.pathname.startsWith('/products'))
+          ? 'w-full' : 'w-0 group-hover:w-full'
       }`} />
     </Link>
   );
@@ -181,7 +184,7 @@ export default function Navbar() {
   return (
     <>
       {/* ── Navbar ── */}
-      <nav className={`sticky top-0 z-40 bg-white transition-shadow duration-300 ${scrolled ? 'shadow-md' : 'shadow-sm'}`}>
+      <nav className={`sticky top-0 z-40 bg-white dark:bg-gray-900 transition-shadow duration-300 ${scrolled ? 'shadow-md' : 'shadow-sm'}`}>
         <div className="max-w-7xl mx-auto px-4 lg:px-6 h-[70px] flex items-center justify-between gap-4">
 
           {/* Logo */}
