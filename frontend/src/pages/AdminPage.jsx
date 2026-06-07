@@ -198,25 +198,25 @@ export default function AdminPage() {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
       {/* Admin header */}
-      <div className="bg-white dark:bg-gray-900 border-b dark:border-gray-800 px-4 py-4">
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
+      <div className="bg-white dark:bg-gray-900 border-b dark:border-gray-800 px-4 py-3 sm:py-4">
+        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
-            <h1 className="text-2xl font-black text-gray-900 dark:text-white">{t('admin.dashboard')}</h1>
-            <p className="text-sm text-gray-500 dark:text-gray-400">Gebeya-B Management Console</p>
+            <h1 className="text-xl sm:text-2xl font-black text-gray-900 dark:text-white">{t('admin.dashboard')}</h1>
+            <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">Gebeya-B Management Console</p>
           </div>
-          <div className="flex gap-2">
+          <div className="flex gap-1.5 sm:gap-2 overflow-x-auto scrollbar-hide pb-0.5">
             {TABS.map(({ key, icon, label }) => (
               <button key={key} onClick={() => setTab(key)}
-                className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition-all ${tab === key ? 'bg-primary-500 text-white shadow-sm' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'}`}>
+                className={`flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all whitespace-nowrap shrink-0 ${tab === key ? 'bg-primary-500 text-white shadow-sm' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'}`}>
                 <span>{icon}</span>
-                <span className="hidden sm:inline">{label}</span>
+                <span>{label}</span>
               </button>
             ))}
           </div>
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
 
         {/* ── Dashboard ── */}
         {tab === 'dashboard' && (

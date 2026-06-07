@@ -91,22 +91,22 @@ export default function RegisterPage() {
       </div>
 
       {/* ── Right panel — form ── */}
-      <div className="flex-1 flex items-center justify-center px-4 py-10">
+      <div className="flex-1 flex items-center justify-center px-4 py-8 sm:py-10">
         <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.5 }}
           className="w-full max-w-md">
 
           {/* Mobile logo */}
-          <div className="flex lg:hidden justify-center mb-8">
+          <div className="flex lg:hidden justify-center mb-6 sm:mb-8">
             <Link to="/" className="flex flex-col items-center gap-2">
-              <img src="/logo.jpg" alt="gebeya-B" className="h-14 w-14 object-contain rounded-full shadow-lg"
+              <img src="/logo.jpg" alt="gebeya-B" className="h-12 w-12 sm:h-14 sm:w-14 object-contain rounded-full shadow-lg"
                 onError={(e) => { e.currentTarget.style.display = 'none'; }} />
-              <span className="font-black text-[#2C1810] text-lg">gebeya-B</span>
+              <span className="font-black text-[#2C1810] text-base sm:text-lg">gebeya-B</span>
             </Link>
           </div>
 
-          <div className="bg-white rounded-3xl shadow-sm p-8">
-            <div className="mb-7">
-              <h1 className="text-2xl font-black text-[#2C1810]">Create your account</h1>
+          <div className="bg-white rounded-2xl sm:rounded-3xl shadow-sm p-6 sm:p-8">
+            <div className="mb-5 sm:mb-7">
+              <h1 className="text-xl sm:text-2xl font-black text-[#2C1810]">Create your account</h1>
               <p className="text-sm text-gray-400 mt-1">Join thousands of Ethiopian culture lovers</p>
             </div>
 
@@ -158,11 +158,10 @@ export default function RegisterPage() {
                     }`}
                   />
                   <button type="button" onClick={() => setShowPass(!showPass)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 text-lg">
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 text-lg p-1">
                     {showPass ? '🙈' : '👁'}
                   </button>
                 </div>
-                {/* Strength bar */}
                 {form.password.length > 0 && (
                   <div className="mt-2 flex items-center gap-2">
                     <div className="flex gap-1 flex-1">
@@ -193,7 +192,7 @@ export default function RegisterPage() {
                     }`}
                   />
                   <button type="button" onClick={() => setShowConfirm(!showConfirm)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 text-lg">
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 text-lg p-1">
                     {showConfirm ? '🙈' : '👁'}
                   </button>
                 </div>
@@ -205,7 +204,7 @@ export default function RegisterPage() {
 
               {/* Submit */}
               <button type="submit" disabled={loading}
-                className="w-full py-3.5 bg-[#078930] hover:bg-[#056b25] text-white font-bold rounded-xl transition-all disabled:opacity-60 flex items-center justify-center gap-2 shadow-lg shadow-[#078930]/25 hover:-translate-y-0.5 hover:shadow-xl mt-2">
+                className="w-full py-3 sm:py-3.5 bg-[#078930] hover:bg-[#056b25] active:bg-[#045a1f] text-white font-bold rounded-xl transition-all disabled:opacity-60 flex items-center justify-center gap-2 shadow-lg shadow-[#078930]/25 hover:-translate-y-0.5 active:translate-y-0 mt-2">
                 {loading
                   ? <><span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" /> Creating account...</>
                   : 'Create Account →'
@@ -213,7 +212,7 @@ export default function RegisterPage() {
               </button>
             </form>
 
-            <div className="flex items-center gap-3 my-5">
+            <div className="flex items-center gap-3 my-4 sm:my-5">
               <div className="flex-1 h-px bg-gray-100" />
               <span className="text-xs text-gray-400">or</span>
               <div className="flex-1 h-px bg-gray-100" />
@@ -225,7 +224,7 @@ export default function RegisterPage() {
             </p>
           </div>
 
-          <div className="h-1 w-full mt-5 rounded-full"
+          <div className="h-1 w-full mt-4 sm:mt-5 rounded-full"
             style={{ background: 'linear-gradient(90deg,#078930 33%,#FCDD09 33% 66%,#DA121A 66%)' }} />
         </motion.div>
       </div>
