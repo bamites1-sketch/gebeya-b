@@ -44,8 +44,21 @@ export default function AboutPage() {
 
               {/* Avatar */}
               <div className="shrink-0">
-                <div className="w-20 h-20 sm:w-28 sm:h-28 rounded-2xl bg-gradient-to-br from-[#F19A0E] to-[#2C1810] flex items-center justify-center shadow-lg">
-                  <span className="text-4xl sm:text-5xl font-black text-white">B</span>
+                <div className="w-20 h-20 sm:w-28 sm:h-28 rounded-2xl overflow-hidden shadow-lg border-2 border-[#F19A0E]/30">
+                  <img
+                    src="/images/beamlak.png"
+                    alt="Beamlak Tesfahun"
+                    className="w-full h-full object-cover object-top"
+                    onError={(e) => {
+                      e.currentTarget.style.display = 'none';
+                      e.currentTarget.nextElementSibling.style.display = 'flex';
+                    }}
+                  />
+                  {/* Fallback if image fails */}
+                  <div style={{ display: 'none' }}
+                    className="w-full h-full bg-gradient-to-br from-[#F19A0E] to-[#2C1810] items-center justify-center">
+                    <span className="text-4xl sm:text-5xl font-black text-white">B</span>
+                  </div>
                 </div>
               </div>
 
