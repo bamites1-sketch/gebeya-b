@@ -12,6 +12,9 @@ function getTransporter() {
     port: parseInt(SMTP_PORT || '587', 10),
     secure: SMTP_PORT === '465',
     auth: { user: SMTP_USER, pass: SMTP_PASS },
+    connectionTimeout: 10000,
+    greetingTimeout: 10000,
+    socketTimeout: 15000,
   });
   return transporter;
 }
@@ -186,7 +189,8 @@ async function sendPasswordResetEmail({ email, name, resetUrl }) {
     return false;
   }
   const from = process.env.FROM_EMAIL || process.env.SMTP_USER;
-  await transport.sendMail({
+  // Fire and don't block the HTTP response — log errors but don't throw
+  transport.sendMail({
     from: `"gebeya-B" <${from}>`,
     to: email,
     subject: 'Reset your gebeya-B password',
@@ -210,7 +214,8 @@ async function sendPasswordResetEmail({ email, name, resetUrl }) {
         <p style="font-size:11px;color:#aaa;margin-top:8px">gebeya-B · Ethiopian Cultural Marketplace 🇪🇹</p>
       </div>
     `,
-  });
+  }).then(() => console.log('Password reset email sent to', email))
+    .catch((err) => console.error('Password reset email error:', err.message));
   return true;
 }
 
