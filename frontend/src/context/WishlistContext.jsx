@@ -6,7 +6,7 @@ import toast from 'react-hot-toast';
 const WishlistContext = createContext(null);
 
 export const WishlistProvider = ({ children }) => {
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const [wishlist, setWishlist] = useState(null);
 
   const fetchWishlist = async () => {
@@ -17,7 +17,10 @@ export const WishlistProvider = ({ children }) => {
     } catch {}
   };
 
-  useEffect(() => { fetchWishlist(); }, [user]);
+  useEffect(() => {
+    if (authLoading) return;   // don't fetch until auth resolves
+    fetchWishlist();
+  }, [user, authLoading]);
 
   const toggle = async (productId) => {
     if (!user) { toast.error('Please login first'); return; }

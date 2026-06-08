@@ -6,7 +6,7 @@ import toast from 'react-hot-toast';
 const CartContext = createContext(null);
 
 export const CartProvider = ({ children }) => {
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const [cart, setCart] = useState(null);
   const [loading, setLoading] = useState(false);
 
@@ -18,7 +18,10 @@ export const CartProvider = ({ children }) => {
     } catch {}
   };
 
-  useEffect(() => { fetchCart(); }, [user]);
+  useEffect(() => {
+    if (authLoading) return;   // don't fetch until auth resolves
+    fetchCart();
+  }, [user, authLoading]);
 
   const addToCart = async (productId, quantity = 1) => {
     if (!user) { toast.error('Please login first'); return; }

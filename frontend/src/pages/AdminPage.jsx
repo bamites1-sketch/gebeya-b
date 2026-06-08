@@ -115,14 +115,14 @@ function ProductModal({ product, onClose, onSaved, t }) {
 
 export default function AdminPage() {
   const { t } = useTranslation();
-  const { isAdmin } = useAuth();
+  const { isAdmin, loading: authLoading } = useAuth();
   const navigate = useNavigate();
   const [tab, setTab] = useState('dashboard');
   const [stats, setStats] = useState(null);
   const [products, setProducts] = useState([]);
   const [orders, setOrders] = useState([]);
   const [sellers, setSellers] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [editProduct, setEditProduct] = useState(null);
   const [showForm, setShowForm] = useState(false);
   const [search, setSearch] = useState('');
@@ -132,10 +132,10 @@ export default function AdminPage() {
   const [savingPay, setSavingPay] = useState(false);
 
   useEffect(() => {
-    if (loading) return;           // wait for auth to finish
+    if (authLoading) return;        // wait for token verification to complete
     if (!isAdmin) { navigate('/'); return; }
     loadData();
-  }, [isAdmin, loading]);
+  }, [isAdmin, authLoading]);
 
   const loadData = async () => {
     setLoading(true);

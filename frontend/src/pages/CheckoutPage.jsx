@@ -114,6 +114,7 @@ export default function CheckoutPage() {
   const [payMethod, setPayMethod] = useState('chapa'); // 'chapa' | 'bank'
 
   const user = authCtx?.user;
+  const authLoading = authCtx?.loading;
   const cart = cartCtx?.cart;
   const items = Array.isArray(cart?.items) ? cart.items : [];
   const subtotal = typeof cartCtx?.subtotal === 'number' ? cartCtx.subtotal : 0;
@@ -188,6 +189,8 @@ export default function CheckoutPage() {
       setLoading(false);
     }
   };
+
+  if (authLoading) return null;
 
   if (!user) return (
     <div className="max-w-lg mx-auto px-4 py-24 text-center">

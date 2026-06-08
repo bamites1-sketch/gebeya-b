@@ -273,10 +273,10 @@ async function seed() {
     });
     await prisma.cart.create({ data: { userId: admin.id } });
     await prisma.wishlist.create({ data: { userId: admin.id } });
-    console.log('✅ Admin created: admin@gebeya-b.com / admin1234');
+    console.log(' Admin created: admin@gebeya-b.com / admin1234');
   } else {
     await prisma.user.update({ where: { email: adminEmail }, data: { role: 'ADMIN' } });
-    console.log('✅ Admin already exists — role confirmed ADMIN');
+    console.log('Admin already exists — role confirmed ADMIN');
   }
 
   // ── Demo user ───────────────────────────────────────────────────
@@ -293,9 +293,9 @@ async function seed() {
     });
     await prisma.cart.create({ data: { userId: demo.id } });
     await prisma.wishlist.create({ data: { userId: demo.id } });
-    console.log('✅ Demo user created: demo@gebeya-b.com / demo1234');
+    console.log(' Demo user created: demo@gebeya-b.com / demo1234');
   } else {
-    console.log('✅ Demo user already exists');
+    console.log(' Demo user already exists');
   }
 
   // ── Clear existing product data ─────────────────────────────────

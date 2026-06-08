@@ -21,7 +21,7 @@ export default function ProfilePage() {
   const [form, setForm] = useState({ name: user?.name || '', password: '' });
   const [saving, setSaving] = useState(false);
   const [orders, setOrders] = useState([]);
-  const [ordersLoading, setOrdersLoading] = useState(false);
+  const [ordersLoading, setOrdersLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('profile');
   const [becomingSeller, setBecomingSeller] = useState(false);
   const [sellerForm, setSellerForm] = useState({ shopName: '', bio: '' });

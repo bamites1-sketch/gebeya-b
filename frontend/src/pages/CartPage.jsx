@@ -7,10 +7,13 @@ import { getFirstImage } from '../utils/images';
 export default function CartPage() {
   const { t } = useTranslation();
   const { cart, updateItem, removeItem, total, subtotal, tax, fetchCart } = useCart();
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
 
   const handleCheckout = () => navigate('/checkout');
+
+  // Show nothing while auth is resolving — avoids flashing "Sign in" for logged-in users
+  if (authLoading) return null;
 
   if (!user) return (
     <div className="max-w-lg mx-auto px-4 py-24 text-center">
