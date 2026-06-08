@@ -83,8 +83,22 @@ app.use((req, res) => {
 app.use(require('./middleware/error.middleware'));
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
+app.listen(PORT, async () => {
   console.log(`🚀 Gebeya-B server running on port ${PORT}`);
+
+  // Auto-seed if the products table is empty (first deploy or after a wipe)
+  try {
+    const prisma = require('./lib/prisma');
+    const count = await prisma.product.count();
+    if (count === 0) {
+      console.log('📦 Products table is empty — running auto-seed...');
+      require('./seed-auto');
+    } else {
+      console.log(`📦 ${count} products in DB — skipping seed`);
+    }
+  } catch (e) {
+    console.error('⚠️  Auto-seed check failed:', e.message);
+  }
 });
 
 module.exports = app;
