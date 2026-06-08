@@ -74,6 +74,18 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', message: 'Gebeya-B API is running' });
 });
 
+// Temporary SMTP diagnostics — shows env vars are loaded (no secrets exposed)
+app.get('/api/debug/smtp', (req, res) => {
+  res.json({
+    SMTP_HOST:  process.env.SMTP_HOST   || 'NOT SET',
+    SMTP_PORT:  process.env.SMTP_PORT   || 'NOT SET',
+    SMTP_USER:  process.env.SMTP_USER   || 'NOT SET',
+    SMTP_PASS:  process.env.SMTP_PASS   ? `SET (${process.env.SMTP_PASS.length} chars)` : 'NOT SET',
+    FROM_EMAIL: process.env.FROM_EMAIL  || 'NOT SET',
+    FRONTEND_URL: process.env.FRONTEND_URL || 'NOT SET',
+  });
+});
+
 // 404 handler for unknown routes
 app.use((req, res) => {
   res.status(404).json({ message: `Route ${req.method} ${req.path} not found` });
