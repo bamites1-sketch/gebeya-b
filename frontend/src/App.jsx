@@ -18,6 +18,8 @@ import CheckoutPage from './pages/CheckoutPage';
 import AboutPage from './pages/AboutPage';
 import PaymentSuccessPage from './pages/PaymentSuccessPage';
 import SellerDashboardPage from './pages/SellerDashboardPage';
+import ForgotPasswordPage from './pages/ForgotPasswordPage';
+import ResetPasswordPage from './pages/ResetPasswordPage';
 import { Link } from 'react-router-dom';
 
 function NotFoundPage() {
@@ -55,6 +57,8 @@ export default function App() {
                 <Route path="/about" element={<AboutPage />} />
                 <Route path="/payment-success" element={<PaymentSuccessPage />} />
                 <Route path="/seller" element={<SellerDashboardPage />} />
+                <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+                <Route path="/reset-password" element={<ResetPasswordPage />} />
                 <Route path="*" element={<NotFoundPage />} />
               </Routes>
             </Layout>

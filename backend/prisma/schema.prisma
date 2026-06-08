@@ -22,6 +22,7 @@ model User {
   reviews   Review[]
   products  Product[] // products this seller owns
   notifications Notification[]
+  passwordResets PasswordResetToken[]
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
 }
@@ -151,3 +152,15 @@ model SiteConfig {
   value     String   @db.Text
   updatedAt DateTime @updatedAt
 }
+
+// Password reset tokens
+model PasswordResetToken {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  token     String   @unique
+  expiresAt DateTime
+  used      Boolean  @default(false)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+}
+
