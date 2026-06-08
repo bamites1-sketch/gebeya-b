@@ -1,13 +1,11 @@
 /**
  * seed-auto.js — Non-destructive seed that runs on server startup
  * when the products table is empty.
- * 
- * Unlike seed.js (dev tool), this NEVER deletes existing users, orders,
- * or cart data. It only inserts what's missing.
+ *
+ * Reuses the shared lib/prisma.js instance — never opens extra DB connections.
  */
-const { PrismaClient } = require('@prisma/client');
+const prisma = require('./lib/prisma');
 const bcrypt = require('bcryptjs');
-const prisma = new PrismaClient();
 
 const UNSPLASH_IMAGES = {
   clothing:  'https://images.unsplash.com/photo-1594736797933-d0501ba2fe65?w=800&q=80',
@@ -147,5 +145,4 @@ async function autoSeed() {
 }
 
 autoSeed()
-  .catch((e) => console.error('❌ Auto-seed failed:', e.message))
-  .finally(() => prisma.$disconnect());
+  .catch((e) => console.error('❌ Auto-seed failed:', e.message));
