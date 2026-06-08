@@ -267,7 +267,7 @@ function ProductModal({ product, onClose, onSaved }) {
 }
 
 export default function SellerDashboardPage() {
-  const { user, updateUser } = useAuth();
+  const { user, updateUser, loading: authLoading } = useAuth();
   const navigate = useNavigate();
   const [tab, setTab] = useState('dashboard');
   const [products, setProducts] = useState([]);
@@ -281,10 +281,11 @@ export default function SellerDashboardPage() {
   const isSeller = user?.role === 'SELLER' || user?.role === 'ADMIN';
 
   useEffect(() => {
+    if (authLoading) return;           // wait for token verification
     if (!user) { navigate('/login'); return; }
     if (isSeller) loadData();
     else setLoading(false);
-  }, [user]);
+  }, [user, authLoading]);
 
   const loadData = async () => {
     setLoading(true);
@@ -324,6 +325,7 @@ export default function SellerDashboardPage() {
     } catch { toast.error('Delete failed'); }
   };
 
+  if (authLoading) return null;
   if (!user) return null;
 
   // Apply to become seller

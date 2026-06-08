@@ -16,13 +16,14 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
-// Handle 401 globally — but NOT on auth endpoints (login/me/register)
+// Handle 401 globally — but NOT on auth endpoints, and NOT when already on /login
 api.interceptors.response.use(
   (res) => res,
   (err) => {
     const url = err.config?.url || '';
     const isAuthRoute = url.includes('/auth/');
-    if (err.response?.status === 401 && !isAuthRoute) {
+    const onLoginPage = window.location.pathname === '/login';
+    if (err.response?.status === 401 && !isAuthRoute && !onLoginPage) {
       localStorage.removeItem('token');
       localStorage.removeItem('user');
       window.location.href = '/login';

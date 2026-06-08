@@ -21,7 +21,7 @@ export default function ProfilePage() {
   const [form, setForm] = useState({ name: user?.name || '', password: '' });
   const [saving, setSaving] = useState(false);
   const [orders, setOrders] = useState([]);
-  const [ordersLoading, setOrdersLoading] = useState(true);
+  const [ordersLoading, setOrdersLoading] = useState(false);
   const [activeTab, setActiveTab] = useState('profile');
   const [becomingSeller, setBecomingSeller] = useState(false);
   const [sellerForm, setSellerForm] = useState({ shopName: '', bio: '' });
@@ -44,11 +44,12 @@ export default function ProfilePage() {
   };
 
   useEffect(() => {
+    if (!user) return;   // only fetch orders when logged in
     api.get('/orders/my')
       .then(({ data }) => setOrders(data))
       .catch(() => {})
       .finally(() => setOrdersLoading(false));
-  }, []);
+  }, [user]);
 
   const handleSave = async (e) => {
     e.preventDefault();
