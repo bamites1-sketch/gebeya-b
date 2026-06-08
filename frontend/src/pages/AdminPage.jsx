@@ -132,9 +132,10 @@ export default function AdminPage() {
   const [savingPay, setSavingPay] = useState(false);
 
   useEffect(() => {
+    if (loading) return;           // wait for auth to finish
     if (!isAdmin) { navigate('/'); return; }
     loadData();
-  }, [isAdmin]);
+  }, [isAdmin, loading]);
 
   const loadData = async () => {
     setLoading(true);
