@@ -74,16 +74,30 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', message: 'Gebeya-B API is running' });
 });
 
-// Temporary SMTP diagnostics — shows env vars are loaded (no secrets exposed)
-app.get('/api/debug/smtp', (req, res) => {
-  res.json({
-    SMTP_HOST:  process.env.SMTP_HOST   || 'NOT SET',
-    SMTP_PORT:  process.env.SMTP_PORT   || 'NOT SET',
-    SMTP_USER:  process.env.SMTP_USER   || 'NOT SET',
-    SMTP_PASS:  process.env.SMTP_PASS   ? `SET (${process.env.SMTP_PASS.length} chars)` : 'NOT SET',
-    FROM_EMAIL: process.env.FROM_EMAIL  || 'NOT SET',
-    FRONTEND_URL: process.env.FRONTEND_URL || 'NOT SET',
-  });
+// Temporary SMTP test — fires a real email and returns the result
+app.get('/api/debug/smtp-test', async (req, res) => {
+  try {
+    const nodemailer = require('nodemailer');
+    const { SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS, FROM_EMAIL } = process.env;
+    const transport = nodemailer.createTransport({
+      host: SMTP_HOST,
+      port: parseInt(SMTP_PORT || '465'),
+      secure: SMTP_PORT === '465',
+      auth: { user: SMTP_USER, pass: SMTP_PASS },
+      connectionTimeout: 10000,
+      greetingTimeout: 10000,
+      socketTimeout: 15000,
+    });
+    await transport.sendMail({
+      from: `"gebeya-B test" <${FROM_EMAIL}>`,
+      to: SMTP_USER,
+      subject: 'Render SMTP test',
+      text: 'If you see this, SMTP works from Render.',
+    });
+    res.json({ ok: true, message: 'Email sent successfully' });
+  } catch (err) {
+    res.status(500).json({ ok: false, error: err.message });
+  }
 });
 
 // 404 handler for unknown routes
