@@ -6,7 +6,7 @@ import { getFirstImage } from '../utils/images';
 
 export default function CartPage() {
   const { t } = useTranslation();
-  const { cart, updateItem, removeItem, total, fetchCart } = useCart();
+  const { cart, updateItem, removeItem, total, subtotal, tax, fetchCart } = useCart();
   const { user } = useAuth();
   const navigate = useNavigate();
 
@@ -91,17 +91,22 @@ export default function CartPage() {
             <div className="space-y-3 text-sm">
               <div className="flex justify-between text-gray-600 dark:text-gray-400">
                 <span>Subtotal ({items.reduce((s, i) => s + i.quantity, 0)} items)</span>
-                <span>{total.toLocaleString()} {t('common.etb')}</span>
+                <span>{subtotal.toLocaleString()} {t('common.etb')}</span>
               </div>
               <div className="flex justify-between text-gray-600 dark:text-gray-400">
                 <span>Shipping</span>
                 <span className="text-green-600 font-medium">Free</span>
+              </div>
+              <div className="flex justify-between text-gray-600 dark:text-gray-400">
+                <span>VAT (15%)</span>
+                <span>{tax.toLocaleString()} {t('common.etb')}</span>
               </div>
             </div>
             <div className="border-t dark:border-gray-700 mt-4 pt-4 flex justify-between font-black text-gray-900 dark:text-white text-base sm:text-lg">
               <span>{t('cart.total')}</span>
               <span className="text-primary-600">{total.toLocaleString()} {t('common.etb')}</span>
             </div>
+            <p className="text-xs text-gray-400 mt-1 text-right">Tax included</p>
             <button onClick={handleCheckout}
               className="w-full mt-4 sm:mt-5 bg-primary-500 hover:bg-primary-600 active:bg-primary-700 text-white py-3 sm:py-3.5 rounded-xl font-bold transition-colors flex items-center justify-center gap-2 active:scale-[0.98]">
               🛍️ {t('cart.checkout')}

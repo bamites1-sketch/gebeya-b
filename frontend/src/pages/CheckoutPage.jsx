@@ -116,7 +116,9 @@ export default function CheckoutPage() {
   const user = authCtx?.user;
   const cart = cartCtx?.cart;
   const items = Array.isArray(cart?.items) ? cart.items : [];
-  const total = typeof cartCtx?.total === 'number' ? cartCtx.total : 0;
+  const subtotal = typeof cartCtx?.subtotal === 'number' ? cartCtx.subtotal : 0;
+  const tax      = typeof cartCtx?.tax === 'number' ? cartCtx.tax : 0;
+  const total    = typeof cartCtx?.total === 'number' ? cartCtx.total : 0;
 
   // Fetch payment accounts from backend
   useEffect(() => {
@@ -378,15 +380,19 @@ export default function CheckoutPage() {
               </div>
               <div className="border-t pt-3 sm:pt-4 space-y-2 text-sm">
                 <div className="flex justify-between text-gray-600">
-                  <span>Subtotal</span><span>{total.toLocaleString()} ETB</span>
+                  <span>Subtotal</span><span>{subtotal.toLocaleString()} ETB</span>
                 </div>
                 <div className="flex justify-between text-gray-600">
                   <span>Shipping</span><span className="text-green-600 font-medium">Free</span>
+                </div>
+                <div className="flex justify-between text-gray-600">
+                  <span>VAT (15%)</span><span>{tax.toLocaleString()} ETB</span>
                 </div>
                 <div className="flex justify-between font-black text-gray-900 text-sm sm:text-base pt-2 border-t">
                   <span>Total</span>
                   <span className="text-[#F19A0E]">{total.toLocaleString()} ETB</span>
                 </div>
+                <p className="text-xs text-gray-400 text-right">VAT included</p>
               </div>
             </div>
           </div>

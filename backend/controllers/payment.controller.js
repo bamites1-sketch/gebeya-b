@@ -43,7 +43,11 @@ const initializePayment = async (req, res, next) => {
     if (!cart || cart.items.length === 0) {
       return res.status(400).json({ message: 'Cart is empty' });
     }
-    const totalPrice = cart.items.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
+    const subtotal   = cart.items.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
+    const TAX_RATE   = 0.15;
+    const tax        = Math.round(subtotal * TAX_RATE);
+    const totalPrice = subtotal + tax;
+
     const order = await prisma.order.create({
       data: {
         userId: req.user.id,

@@ -57,10 +57,13 @@ export const CartProvider = ({ children }) => {
   };
 
   const itemCount = cart?.items?.reduce((sum, i) => sum + i.quantity, 0) || 0;
-  const total = cart?.items?.reduce((sum, i) => sum + i.product.price * i.quantity, 0) || 0;
+  const subtotal  = cart?.items?.reduce((sum, i) => sum + i.product.price * i.quantity, 0) || 0;
+  const TAX_RATE  = 0.15;
+  const tax       = Math.round(subtotal * TAX_RATE);
+  const total     = subtotal + tax;
 
   return (
-    <CartContext.Provider value={{ cart, loading, addToCart, updateItem, removeItem, clearCart, itemCount, total, fetchCart }}>
+    <CartContext.Provider value={{ cart, loading, addToCart, updateItem, removeItem, clearCart, itemCount, subtotal, tax, total, fetchCart }}>
       {children}
     </CartContext.Provider>
   );
