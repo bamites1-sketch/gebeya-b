@@ -182,8 +182,10 @@ export default function AdminPage() {
       toast.success('Product deleted');
       setProducts((prev) => prev.filter((p) => p.id !== id));
       if (stats) setStats((s) => ({ ...s, totalProducts: s.totalProducts - 1 }));
-    } catch {
-      toast.error('Delete failed');
+    } catch (err) {
+      const msg = err.response?.data?.message || err.message || 'Delete failed';
+      toast.error(msg);
+      console.error('Delete error:', err.response?.data || err.message);
     }
   };
 
