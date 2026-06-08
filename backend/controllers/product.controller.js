@@ -124,7 +124,12 @@ const updateProduct = async (req, res, next) => {
 
 const deleteProduct = async (req, res, next) => {
   try {
-    await prisma.product.delete({ where: { id: parseInt(req.params.id) } });
+    const id = parseInt(req.params.id);
+
+    // OrderItem has no cascade — must be cleared manually before deleting the product
+    await prisma.orderItem.deleteMany({ where: { productId: id } });
+
+    await prisma.product.delete({ where: { id } });
     res.json({ message: 'Product deleted' });
   } catch (error) {
     next(error);
