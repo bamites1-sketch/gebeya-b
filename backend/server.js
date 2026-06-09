@@ -71,7 +71,12 @@ app.get('/', (req, res) => {
 
 // Health check
 app.get('/api/health', (req, res) => {
-  res.json({ status: 'ok', message: 'Gebeya-B API is running' });
+  const { SMTP_HOST, SMTP_USER, SMTP_PASS } = process.env;
+  res.json({
+    status: 'ok',
+    message: 'Gebeya-B API is running',
+    smtpConfigured: !!(SMTP_HOST && SMTP_USER && SMTP_PASS)
+  });
 });
 
 // 404 handler for unknown routes
