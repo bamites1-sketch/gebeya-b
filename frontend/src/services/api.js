@@ -1,8 +1,7 @@
 import axios from 'axios';
+import { resolveApiBaseUrl } from '../utils/apiBase';
 
-// Strip any accidental trailing slash then append /api if missing
-const raw = (import.meta.env.VITE_API_URL || 'https://gebeya-b-api.onrender.com/api').trim().replace(/\/$/, '');
-const baseURL = raw.endsWith('/api') ? raw : `${raw}/api`;
+const baseURL = resolveApiBaseUrl(import.meta.env);
 
 const api = axios.create({
   baseURL,

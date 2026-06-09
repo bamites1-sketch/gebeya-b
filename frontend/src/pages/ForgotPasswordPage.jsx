@@ -3,8 +3,9 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import { motion } from 'framer-motion';
+import { resolveApiBaseUrl } from '../utils/apiBase';
 
-const API = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+const API = resolveApiBaseUrl(import.meta.env);
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState('');
