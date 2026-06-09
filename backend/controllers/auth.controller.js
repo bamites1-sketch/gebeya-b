@@ -10,13 +10,15 @@ const generateToken = (id) =>
 const register = async (req, res, next) => {
   try {
     const { name, email, password } = req.body;
+    if (!email) return res.status(400).json({ message: 'Email is required' });
+    const normalizedEmail = email.toLowerCase().trim();
 
-    const existing = await prisma.user.findUnique({ where: { email } });
+    const existing = await prisma.user.findUnique({ where: { email: normalizedEmail } });
     if (existing) return res.status(400).json({ message: 'Email already registered' });
 
     const hashed = await bcrypt.hash(password, 12);
     const user = await prisma.user.create({
-      data: { name, email, password: hashed },
+      data: { name, email: normalizedEmail, password: hashed },
       select: { id: true, name: true, email: true, role: true },
     });
 
@@ -33,8 +35,10 @@ const register = async (req, res, next) => {
 const login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
+    if (!email) return res.status(400).json({ message: 'Email is required' });
+    const normalizedEmail = email.toLowerCase().trim();
 
-    const user = await prisma.user.findUnique({ where: { email } });
+    const user = await prisma.user.findUnique({ where: { email: normalizedEmail } });
     if (!user) return res.status(401).json({ message: 'Invalid credentials' });
 
     const match = await bcrypt.compare(password, user.password);
@@ -82,7 +86,8 @@ const forgotPassword = async (req, res, next) => {
     const { email } = req.body;
     if (!email) return res.status(400).json({ message: 'Email is required' });
 
-    const user = await prisma.user.findUnique({ where: { email: email.toLowerCase().trim() } });
+    const normalizedEmail = email.toLowerCase().trim();
+    const user = await prisma.user.findUnique({ where: { email: normalizedEmail } });
 
     // Always respond with success — never reveal if email exists (security)
     const OK = { message: 'If that email is registered, a reset link has been sent.' };

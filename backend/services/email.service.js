@@ -189,34 +189,38 @@ async function sendPasswordResetEmail({ email, name, resetUrl }) {
     return false;
   }
   const from = process.env.FROM_EMAIL || process.env.SMTP_USER;
-  // Fire and don't block the HTTP response — log errors but don't throw
-  transport.sendMail({
-    from: `"gebeya-B" <${from}>`,
-    to: email,
-    subject: 'Reset your gebeya-B password',
-    html: `
-      <div style="font-family:sans-serif;max-width:520px;margin:0 auto;color:#2C1810">
-        <h2 style="color:#F19A0E">🔐 Password Reset</h2>
-        <p>Hi ${name},</p>
-        <p>We received a request to reset your password. Click the button below — the link expires in <strong>1 hour</strong>.</p>
-        <div style="margin:28px 0;text-align:center">
-          <a href="${resetUrl}"
-            style="background:#F19A0E;color:#fff;padding:14px 32px;border-radius:12px;text-decoration:none;font-weight:bold;font-size:15px;display:inline-block">
-            Reset Password
-          </a>
+  try {
+    await transport.sendMail({
+      from: `"gebeya-B" <${from}>`,
+      to: email,
+      subject: 'Reset your gebeya-B password',
+      html: `
+        <div style="font-family:sans-serif;max-width:520px;margin:0 auto;color:#2C1810">
+          <h2 style="color:#F19A0E">🔐 Password Reset</h2>
+          <p>Hi ${name},</p>
+          <p>We received a request to reset your password. Click the button below — the link expires in <strong>1 hour</strong>.</p>
+          <div style="margin:28px 0;text-align:center">
+            <a href="${resetUrl}"
+              style="background:#F19A0E;color:#fff;padding:14px 32px;border-radius:12px;text-decoration:none;font-weight:bold;font-size:15px;display:inline-block">
+              Reset Password
+            </a>
+          </div>
+          <p style="font-size:13px;color:#666">Or paste this link in your browser:</p>
+          <p style="font-size:12px;color:#888;word-break:break-all">${resetUrl}</p>
+          <p style="font-size:13px;color:#666;margin-top:24px">
+            If you didn't request this, ignore this email — your password won't change.
+          </p>
+          <div style="height:3px;background:linear-gradient(90deg,#078930 33%,#FCDD09 33% 66%,#DA121A 66%);border-radius:2px;margin-top:28px"></div>
+          <p style="font-size:11px;color:#aaa;margin-top:8px">gebeya-B · Ethiopian Cultural Marketplace 🇪🇹</p>
         </div>
-        <p style="font-size:13px;color:#666">Or paste this link in your browser:</p>
-        <p style="font-size:12px;color:#888;word-break:break-all">${resetUrl}</p>
-        <p style="font-size:13px;color:#666;margin-top:24px">
-          If you didn't request this, ignore this email — your password won't change.
-        </p>
-        <div style="height:3px;background:linear-gradient(90deg,#078930 33%,#FCDD09 33% 66%,#DA121A 66%);border-radius:2px;margin-top:28px"></div>
-        <p style="font-size:11px;color:#aaa;margin-top:8px">gebeya-B · Ethiopian Cultural Marketplace 🇪🇹</p>
-      </div>
-    `,
-  }).then(() => console.log('Password reset email sent to', email))
-    .catch((err) => console.error('Password reset email error:', err.message));
-  return true;
+      `,
+    });
+    console.log('Password reset email sent to', email);
+    return true;
+  } catch (err) {
+    console.error('Password reset email error:', err.message);
+    return false;
+  }
 }
 
 module.exports = { sendInvoiceEmail, sendSellerSaleEmails, sendPasswordResetEmail };
