@@ -1,21 +1,39 @@
 const nodemailer = require('nodemailer');
 const https = require('https');
+const path = require('path');
+const dotenv = require('dotenv');
+
+dotenv.config({ path: path.resolve(__dirname, '../.env') });
 
 let transporter = null;
 
+function getMailConfig() {
+  const host = process.env.SMTP_HOST || process.env.MAIL_HOST || process.env.MAILER_HOST;
+  const port = process.env.SMTP_PORT || process.env.MAIL_PORT || process.env.MAILER_PORT || '587';
+  const user = process.env.SMTP_USER || process.env.MAIL_USERNAME || process.env.MAIL_USER || process.env.MAILER_USER;
+  const pass = process.env.SMTP_PASS || process.env.MAIL_PASSWORD || process.env.MAILER_PASSWORD;
+  const from = process.env.FROM_EMAIL || process.env.MAIL_FROM || process.env.MAILER_FROM || user || 'onboarding@resend.dev';
+  const secure = process.env.SMTP_SECURE !== undefined
+    ? ['true', '1', 'yes', 'on'].includes(String(process.env.SMTP_SECURE).toLowerCase())
+    : String(port) === '465';
+
+  return { host, port, user, pass, from, secure };
+}
+
 function getTransporter() {
   if (transporter) return transporter;
-  const { SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS } = process.env;
-  if (!SMTP_HOST || !SMTP_USER || !SMTP_PASS) return null;
+  const { host, port, user, pass, secure } = getMailConfig();
+  if (!host || !user || !pass) return null;
 
   transporter = nodemailer.createTransport({
-    host: SMTP_HOST,
-    port: parseInt(SMTP_PORT || '587', 10),
-    secure: SMTP_PORT === '465',
-    auth: { user: SMTP_USER, pass: SMTP_PASS },
+    host,
+    port: parseInt(port || '587', 10),
+    secure,
+    auth: { user, pass },
     connectionTimeout: 10000,
     greetingTimeout: 10000,
     socketTimeout: 15000,
+    tls: { rejectUnauthorized: process.env.SMTP_REJECT_UNAUTHORIZED !== 'false' },
   });
   return transporter;
 }
@@ -59,31 +77,66 @@ async function sendEmailViaResend({ from, to, subject, html }) {
 }
 
 async function sendMailWrapper({ to, subject, html }) {
-  const from = process.env.FROM_EMAIL || process.env.SMTP_USER || 'onboarding@resend.dev';
+  const { from } = getMailConfig();
 
+  // Try Resend first if API key is configured
   if (process.env.RESEND_API_KEY) {
-    console.log('Sending email via Resend HTTP API to', to);
-    // If the from address is a Gmail address and the user hasn't verified their custom domain on Resend,
-    // Resend requires using onboarding@resend.dev. Let's handle this automatically.
-    const sender = (from.includes('@gmail.com') || from.includes('@hotmail.com') || from.includes('@yahoo.com'))
-      ? 'gebeya-B <onboarding@resend.dev>'
-      : `"gebeya-B" <${from}>`;
+    try {
+      console.log('📧 Attempting to send email via Resend API to', to);
+      // If the from address is a Gmail address and the user hasn't verified their custom domain on Resend,
+      // Resend requires using onboarding@resend.dev. Let's handle this automatically.
+      const sender = (from.includes('@gmail.com') || from.includes('@hotmail.com') || from.includes('@yahoo.com'))
+        ? 'gebeya-B <onboarding@resend.dev>'
+        : `"gebeya-B" <${from}>`;
 
-    return sendEmailViaResend({ from: sender, to, subject, html });
+      const result = await sendEmailViaResend({ from: sender, to, subject, html });
+      console.log('✅ Email sent successfully via Resend');
+      return result;
+    } catch (resendError) {
+      console.error('❌ Resend API failed:', resendError.message);
+      console.log('🔄 Falling back to SMTP...');
+      
+      // Fall back to SMTP if Resend fails
+      const transport = getTransporter();
+      if (!transport) {
+        throw new Error('Resend API failed and SMTP is not configured. Please check your email configuration.');
+      }
+
+      try {
+        const result = await transport.sendMail({
+          from: `"gebeya-B" <${from}>`,
+          to,
+          subject,
+          html,
+        });
+        console.log('✅ Email sent successfully via SMTP fallback');
+        return result;
+      } catch (smtpError) {
+        throw new Error(`Both Resend and SMTP failed. Resend error: ${resendError.message}, SMTP error: ${smtpError.message}`);
+      }
+    }
   }
 
-  // Fallback to SMTP
+  // Use SMTP if Resend is not configured
   const transport = getTransporter();
   if (!transport) {
-    throw new Error('SMTP not configured and RESEND_API_KEY is missing');
+    throw new Error('SMTP not configured. Please set SMTP_HOST, SMTP_USER, and SMTP_PASS environment variables, or configure RESEND_API_KEY.');
   }
 
-  return transport.sendMail({
-    from: `"gebeya-B" <${from}>`,
-    to,
-    subject,
-    html,
-  });
+  console.log('📧 Sending email via SMTP to', to);
+  try {
+    const result = await transport.sendMail({
+      from: `"gebeya-B" <${from}>`,
+      to,
+      subject,
+      html,
+    });
+    console.log('✅ Email sent successfully via SMTP');
+    return result;
+  } catch (smtpError) {
+    console.error('❌ SMTP failed:', smtpError.message);
+    throw new Error(`SMTP configuration error: ${smtpError.message}. Please check your SMTP credentials.`);
+  }
 }
 
 function buildInvoiceHtml({ order, buyer }) {
@@ -275,4 +328,4 @@ async function sendPasswordResetEmail({ email, name, resetUrl }) {
   }
 }
 
-module.exports = { sendInvoiceEmail, sendSellerSaleEmails, sendPasswordResetEmail };
+module.exports = { getMailConfig, sendInvoiceEmail, sendSellerSaleEmails, sendPasswordResetEmail };

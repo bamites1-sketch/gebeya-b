@@ -71,12 +71,14 @@ app.get('/', (req, res) => {
 
 // Health check
 app.get('/api/health', (req, res) => {
-  const { SMTP_HOST, SMTP_USER, SMTP_PASS, RESEND_API_KEY } = process.env;
+  const { RESEND_API_KEY } = process.env;
+  const { host, user, pass, from } = require('./services/email.service').getMailConfig();
   res.json({
     status: 'ok',
     message: 'Gebeya-B API is running',
-    smtpConfigured: !!(SMTP_HOST && SMTP_USER && SMTP_PASS),
-    resendConfigured: !!RESEND_API_KEY
+    smtpConfigured: !!(host && user && pass),
+    resendConfigured: !!RESEND_API_KEY,
+    fromEmail: from || null,
   });
 });
 
