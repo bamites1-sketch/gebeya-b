@@ -1,4 +1,5 @@
 const nodemailer = require('nodemailer');
+const https = require('https');
 
 let transporter = null;
 
@@ -17,6 +18,72 @@ function getTransporter() {
     socketTimeout: 15000,
   });
   return transporter;
+}
+
+async function sendEmailViaResend({ from, to, subject, html }) {
+  const apiKey = process.env.RESEND_API_KEY;
+  return new Promise((resolve, reject) => {
+    const body = JSON.stringify({ from, to, subject, html });
+    const options = {
+      hostname: 'api.resend.com',
+      port: 443,
+      path: '/emails',
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${apiKey}`,
+        'Content-Type': 'application/json',
+        'Content-Length': Buffer.byteLength(body),
+      },
+    };
+
+    const req = https.request(options, (res) => {
+      let data = '';
+      res.on('data', (chunk) => { data += chunk; });
+      res.on('end', () => {
+        if (res.statusCode >= 200 && res.statusCode < 300) {
+          try {
+            resolve(JSON.parse(data));
+          } catch {
+            resolve({ success: true });
+          }
+        } else {
+          reject(new Error(`Resend API error: Status ${res.statusCode} - ${data}`));
+        }
+      });
+    });
+
+    req.on('error', reject);
+    req.write(body);
+    req.end();
+  });
+}
+
+async function sendMailWrapper({ to, subject, html }) {
+  const from = process.env.FROM_EMAIL || process.env.SMTP_USER || 'onboarding@resend.dev';
+
+  if (process.env.RESEND_API_KEY) {
+    console.log('Sending email via Resend HTTP API to', to);
+    // If the from address is a Gmail address and the user hasn't verified their custom domain on Resend,
+    // Resend requires using onboarding@resend.dev. Let's handle this automatically.
+    const sender = (from.includes('@gmail.com') || from.includes('@hotmail.com') || from.includes('@yahoo.com'))
+      ? 'gebeya-B <onboarding@resend.dev>'
+      : `"gebeya-B" <${from}>`;
+
+    return sendEmailViaResend({ from: sender, to, subject, html });
+  }
+
+  // Fallback to SMTP
+  const transport = getTransporter();
+  if (!transport) {
+    throw new Error('SMTP not configured and RESEND_API_KEY is missing');
+  }
+
+  return transport.sendMail({
+    from: `"gebeya-B" <${from}>`,
+    to,
+    subject,
+    html,
+  });
 }
 
 function buildInvoiceHtml({ order, buyer }) {
@@ -66,20 +133,21 @@ function buildInvoiceHtml({ order, buyer }) {
 }
 
 async function sendInvoiceEmail(order, buyer) {
-  const transport = getTransporter();
-  if (!transport || !buyer?.email) {
-    console.log('Invoice email skipped (SMTP not configured or no buyer email)');
+  if (!buyer?.email) {
+    console.log('Invoice email skipped (no buyer email)');
     return false;
   }
-
-  const from = process.env.FROM_EMAIL || process.env.SMTP_USER;
-  await transport.sendMail({
-    from: `"gebeya-B" <${from}>`,
-    to: buyer.email,
-    subject: `Invoice for Order #${order.id} — gebeya-B`,
-    html: buildInvoiceHtml({ order, buyer }),
-  });
-  return true;
+  try {
+    await sendMailWrapper({
+      to: buyer.email,
+      subject: `Invoice for Order #${order.id} — gebeya-B`,
+      html: buildInvoiceHtml({ order, buyer }),
+    });
+    return true;
+  } catch (err) {
+    console.error('Invoice email failed:', err.message);
+    return false;
+  }
 }
 
 // Build HTML for the seller sale notification email
@@ -136,12 +204,6 @@ function buildSellerSaleHtml({ order, seller, saleItems }) {
  * Groups order items by sellerId and sends one email per seller.
  */
 async function sendSellerSaleEmails(order) {
-  const transport = getTransporter();
-  if (!transport) {
-    console.log('Seller sale emails skipped (SMTP not configured)');
-    return;
-  }
-
   // Group items by seller
   const bySeller = {};
   for (const item of order.items) {
@@ -163,18 +225,15 @@ async function sendSellerSaleEmails(order) {
     select: { id: true, name: true, email: true, shopName: true },
   });
 
-  const from = process.env.FROM_EMAIL || process.env.SMTP_USER;
-
   await Promise.allSettled(
     sellers.map((seller) => {
       const group = bySeller[seller.id];
       if (!seller.email) return Promise.resolve();
-      return transport.sendMail({
-        from: `"gebeya-B" <${from}>`,
+      return sendMailWrapper({
         to: seller.email,
         subject: `🎉 New Sale — Order #${order.id} — gebeya-B`,
         html: buildSellerSaleHtml({ order, seller, saleItems: group.items }),
-      });
+      }).catch((err) => console.error(`Seller sale email to ${seller.email} failed:`, err.message));
     })
   );
 }
@@ -183,15 +242,8 @@ async function sendSellerSaleEmails(order) {
  * Send password reset email with a secure link.
  */
 async function sendPasswordResetEmail({ email, name, resetUrl }) {
-  const transport = getTransporter();
-  if (!transport) {
-    console.log('Password reset email skipped (SMTP not configured)');
-    return false;
-  }
-  const from = process.env.FROM_EMAIL || process.env.SMTP_USER;
   try {
-    await transport.sendMail({
-      from: `"gebeya-B" <${from}>`,
+    await sendMailWrapper({
       to: email,
       subject: 'Reset your gebeya-B password',
       html: `
